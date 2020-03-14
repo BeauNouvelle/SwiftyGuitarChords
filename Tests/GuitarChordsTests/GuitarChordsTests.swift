@@ -2,14 +2,13 @@ import XCTest
 @testable import GuitarChords
 
 final class GuitarChordsTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(GuitarChords().text, "Hello, World!")
+
+    func testAllChords() {
+        let allChords = GuitarChords.allChords()
+        print(allChords)
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testAllChords", testAllChords),
     ]
 }
