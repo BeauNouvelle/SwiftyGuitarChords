@@ -3,7 +3,7 @@ import CoreGraphics
 
 public struct GuitarChords {
 
-    public enum Key: String, CaseIterable {
+    public enum Key: String, CaseIterable, Codable {
         case c = "C"
         case cSharp = "C#"
         case d = "D"
@@ -18,7 +18,7 @@ public struct GuitarChords {
         case b = "B"
     }
 
-    public enum Suffix: String, CaseIterable {
+    public enum Suffix: String, CaseIterable, Codable {
         case major = "major"
         case minor = "minor"
         case dim = "dim"
@@ -92,8 +92,8 @@ public struct GuitarChords {
 }
 
 public struct Chord: Codable {
-    public let key: Key
-    public let suffix: Suffix
+    public let key: GuitarChords.Key
+    public let suffix: GuitarChords.Key
     public let positions: [ChordPosition]
 
     public func path() -> CGPath {
