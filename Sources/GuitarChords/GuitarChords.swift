@@ -1,9 +1,6 @@
 import Foundation
 import CoreGraphics
 
-public typealias Key = String
-public typealias Suffix = String
-
 public struct GuitarChords {
 
     public enum Key: String, CaseIterable {
