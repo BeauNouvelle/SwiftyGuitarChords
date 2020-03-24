@@ -1,4 +1,5 @@
 import Foundation
+import CoreGraphics
 
 typealias Key = String
 typealias Suffix = String
@@ -22,7 +23,7 @@ public struct Chord: Codable {
     let suffix: Suffix
     let positions: [ChordPosition]
 
-    public func path() -> CGPath {
+    func path() -> CGPath {
         let path = CGMutablePath()
         path.move(to: .zero)
         path.addLine(to: CGPoint(x: 0, y: 10))
