@@ -3,7 +3,7 @@ import Foundation
 typealias Key = String
 typealias Suffix = String
 
-struct GuitarChords {
+public struct GuitarChords {
 
     static let keys: [Key] = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
 
@@ -17,13 +17,13 @@ struct GuitarChords {
 
 }
 
-struct Chord: Decodable {
+public struct Chord: Decodable {
     let key: Key
     let suffix: Suffix
     let positions: [ChordPosition]
 }
 
-struct ChordPosition: Decodable {
+public struct ChordPosition: Decodable {
     let frets: [Int]
     let fingers: [Int]
     let baseFret: Int
