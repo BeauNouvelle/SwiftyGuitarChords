@@ -1,14 +1,90 @@
 import Foundation
 import CoreGraphics
 
-typealias Key = String
-typealias Suffix = String
+public typealias Key = String
+public typealias Suffix = String
 
 public struct GuitarChords {
 
-    public static let keys: [Key] = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"]
+    public enum Key: String, CaseIterable {
+        case c = "C"
+        case cSharp = "C#"
+        case d = "D"
+        case eFlat = "Eb"
+        case e = "E"
+        case f = "F"
+        case fSharp = "F#"
+        case g = "G"
+        case aFlat = "Ab"
+        case a = "A"
+        case bFlat = "Bb"
+        case b = "B"
+    }
 
-    public static let suffixes: [Suffix] = ["major", "minor", "dim", "dim7", "sus2", "sus4", "7sus4", "7sg", "alt", "aug", "6", "69", "7", "7b5", "aug7", "9", "9b5", "aug9", "7b9", "7#9", "11", "9#11", "13", "maj7", "maj7b5", "maj7#5", "maj9", "maj11", "maj13", "m6", "m69", "m7", "m7b5", "m9", "m11", "mmaj7", "mmaj7b5", "mmaj9", "mmaj11", "add9", "madd9", "/E", "/F", "/F#", "/G", "/G#", "/A", "/Bb", "/B", "/C", "/C#", "m/B", "m/C", "m/C#", "/D", "m/D", "/D#", "m/D#", "m/E", "m/F", "m/F#", "m/G", "m/G#"]
+    public enum Suffix: String, CaseIterable {
+        case major = "major"
+        case minor = "minor"
+        case dim = "dim"
+        case dimSeven = "dim7"
+        case susTwo = "sus2"
+        case susFour = "sus4"
+        case sevenSusFour = "7sus4"
+        case altered = "alt"
+        case aug = "aug"
+        case six = "6"
+        case sixNine = "69"
+        case seven = "7"
+        case sevenFlatFive = "7b5"
+        case augSeven = "aug7"
+        case nine = "9"
+        case nineFlatFive = "9b5"
+        case augNine = "aug9"
+        case sevenFlatNine = "7b9"
+        case sevenSharpNince = "7#9"
+        case eleven = "11"
+        case nineSharpEleven = "9#11"
+        case thirteen = "13"
+        case majorSeven = "maj7"
+        case majorSevenFlatFive = "maj7b5"
+        case majorSevenSharpFive = "maj7#5"
+        case majorNine = "maj9"
+        case majorEleven = "maj11"
+        case majorThirteen = "maj13"
+        case minorSix = "m6"
+        case minorSixNine = "m69"
+        case minorSeven = "m7"
+        case minorSevenFlatFive = "m7b5"
+        case minorNine = "m9"
+        case minorEleven = "m11"
+        case minorMajorSeven = "mmaj7"
+        case minorMajorSeventFlatFive = "mmaj7b5"
+        case minorMajorNine = "mmaj9"
+        case minorMajorEleven = "mmaj11"
+        case addNine = "add9"
+        case minorAddNine = "madd9"
+        case slashE = "/E"
+        case slashF = "/F"
+        case slashFSharp = "/F#"
+        case slashG = "/G"
+        case slashGSharp = "/G#"
+        case slashA = "/A"
+        case slashBFlat = "/Bb"
+        case slashB = "/B"
+        case slashC = "/C"
+        case slashCSharp = "/C#"
+        case minorSlashB = "m/B"
+        case minorSlashC = "m/C"
+        case minorSlashCSharp = "m/C#"
+        case slashD = "/D"
+        case minorSlashD = "m/D"
+        case slashDSharp = "/D#"
+        case minorSlashDSharp = "m/D#"
+        case minorSlashE = "m/E"
+        case minorSlashF = "m/F"
+        case minorSlashFSharp = "m/F#"
+        case minorSlashG = "m/G"
+        case minorSlashGSharp = "m/G#"
+    }
 
     public static func allChords() -> [Chord]? {
         guard let data = ChordsData.data else { return nil }
