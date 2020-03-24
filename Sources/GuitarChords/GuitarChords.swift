@@ -21,6 +21,13 @@ public struct Chord: Decodable {
     let key: Key
     let suffix: Suffix
     let positions: [ChordPosition]
+
+    func path() -> CGPath {
+        let path = CGMutablePath()
+        path.move(to: .zero)
+        path.addLine(to: CGPoint(x: 0, y: 10))
+        return path
+    }
 }
 
 public struct ChordPosition: Decodable {
