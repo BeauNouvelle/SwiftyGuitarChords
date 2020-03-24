@@ -17,7 +17,7 @@ public struct GuitarChords {
 
 }
 
-public struct Chord: Decodable {
+public struct Chord: Codable {
     let key: Key
     let suffix: Suffix
     let positions: [ChordPosition]
@@ -30,7 +30,7 @@ public struct Chord: Decodable {
     }
 }
 
-public struct ChordPosition: Decodable {
+public struct ChordPosition: Codable {
     let frets: [Int]
     let fingers: [Int]
     let baseFret: Int
