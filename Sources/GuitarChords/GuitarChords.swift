@@ -96,10 +96,27 @@ public struct Chord: Codable {
     public let suffix: GuitarChords.Key
     public let positions: [ChordPosition]
 
-    public func path() -> CGPath {
+    private let numberOfStrings = 6
+    private let numberOfFrets = 5
+
+    public func path(size: CGSize) -> CGPath {
         let path = CGMutablePath()
-        path.move(to: .zero)
-        path.addLine(to: CGPoint(x: 0, y: 10))
+
+        let boxWidth = min(size.width, size.height)
+        let boxHeight = boxWidth * 1.2
+
+        for fret in 0...numberOfFrets {
+            let y = boxHeight / CGFloat(numberOfFrets) * CGFloat(fret)
+            path.move(to: CGPoint(x: 0, y: y))
+            path.addLine(to: CGPoint(x: boxWidth, y: y))
+        }
+
+        for string in 0...numberOfStrings {
+            let x = boxWidth / CGFloat(numberOfStrings)
+            path.move(to: CGPoint(x: x, y: 0))
+            path.move(to: CGPoint(x: x, y: boxHeight))
+        }
+
         return path
     }
 }
