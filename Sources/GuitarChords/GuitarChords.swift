@@ -84,9 +84,16 @@ public struct GuitarChords {
     }
 
     public static func allChords() -> [Chord]? {
-        guard let data = ChordsData.data else { return nil }
-        let allChords = try? JSONDecoder().decode([Chord].self, from: data)
-        return allChords
+        guard let data = ChordsData.data else {
+            print("there is no chord data")
+            return nil
+        }
+        do {
+            let allChords = try JSONDecoder().decode([Chord].self, from: data)
+            return allChords
+        } catch {
+            print(error)
+        }
     }
 
 }
