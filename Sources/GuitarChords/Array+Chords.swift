@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Array where Element == Chord {
+public extension Array where Element == Chord {
 
     func keys() -> [GuitarChords.Key] {
         return self.map { $0.key }
