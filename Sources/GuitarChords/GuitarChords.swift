@@ -94,6 +94,7 @@ public struct GuitarChords {
         } catch {
             print(error)
         }
+        return nil
     }
 
 }
