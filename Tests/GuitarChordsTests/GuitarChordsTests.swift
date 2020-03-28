@@ -5,7 +5,7 @@ final class GuitarChordsTests: XCTestCase {
 
     func testAllChords() {
         let allChords = GuitarChords.allChords()
-        print(allChords)
+        XCTAssert(allChords?.count == 528)
     }
 
     static var allTests = [

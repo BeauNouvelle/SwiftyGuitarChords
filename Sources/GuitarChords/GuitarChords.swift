@@ -101,7 +101,7 @@ public struct GuitarChords {
 
 public struct Chord: Codable {
     public let key: GuitarChords.Key
-    public let suffix: GuitarChords.Key
+    public let suffix: GuitarChords.Suffix
     public let positions: [ChordPosition]
 
     private let numberOfStrings = 6
