@@ -297,7 +297,7 @@ struct ChordsData {
       }]
       }, {
       "key": "C",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [-1, 3, 2, 2, 3, 3],
           "fingers": [0, 3, 1, 1, 3, 4],
@@ -957,7 +957,7 @@ struct ChordsData {
       }]
       }, {
       "key": "C",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [-1, 3, 1, 2, 3, 3],
           "fingers": [0, 3, 1, 2, 4, 4],
@@ -1559,7 +1559,7 @@ struct ChordsData {
       }]
       }, {
       "key": "C#",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [-1, 4, 1, 3, 2, 1],
           "fingers": [0, 4, 1, 3, 2, 1],
@@ -2211,7 +2211,7 @@ struct ChordsData {
       }]
       }, {
       "key": "C#",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [-1, 4, 1, 3, 2, 0],
           "fingers": [0, 4, 1, 3, 2, 0],
@@ -2744,7 +2744,7 @@ struct ChordsData {
       }]
       }, {
       "key": "D",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [-1, 4, 3, 1, 0, 0],
           "fingers": [0, 4, 3, 1, 0, 0],
@@ -3394,7 +3394,7 @@ struct ChordsData {
       }]
       }, {
       "key": "D",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [-1, 4, 2, 1, 0, 0],
           "fingers": [0, 4, 2, 1, 0, 0],
@@ -4037,7 +4037,7 @@ struct ChordsData {
       }]
       }, {
       "key": "Eb",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [-1, -1, 1, 0, 1, 1],
           "fingers": [0, 0, 2, 0, 3, 4],
@@ -4695,7 +4695,7 @@ struct ChordsData {
       }]
       }, {
       "key": "Eb",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [2, -1, 1, 3, 1, 1],
           "fingers": [2, 0, 1, 3, 1, 1],
@@ -5229,7 +5229,7 @@ struct ChordsData {
       }]
       }, {
       "key": "E",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [0, 2, 2, 1, 2, 2],
           "fingers": [0, 2, 2, 1, 3, 4],
@@ -5875,7 +5875,7 @@ struct ChordsData {
       }]
       }, {
       "key": "E",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [0, 2, 2, 0, 2, 2],
           "fingers": [0, 1, 1, 0, 2, 3],
@@ -6771,7 +6771,7 @@ struct ChordsData {
       }]
       }, {
       "key": "F",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [1, 0, 0, 0, 1, 1],
           "fingers": [1, 0, 0, 0, 2, 3],
@@ -7428,7 +7428,7 @@ struct ChordsData {
       }]
       }, {
       "key": "F",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [1, 3, 3, 1, 3, 3],
           "fingers": [1, 2, 2, 1, 3, 4],
@@ -8128,7 +8128,7 @@ struct ChordsData {
       }]
       }, {
       "key": "F#",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [2, 1, 1, 1, 2, 2],
           "fingers": [2, 1, 1, 1, 3, 4],
@@ -8790,7 +8790,7 @@ struct ChordsData {
       }]
       }, {
       "key": "F#",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [2, 0, 1, 1, 2, 2],
           "fingers": [2, 0, 1, 1, 3, 4],
@@ -9330,7 +9330,7 @@ struct ChordsData {
       }]
       }, {
       "key": "G",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [3, 0, 0, 0, 0, 0],
           "fingers": [1, 0, 0, 0, 0, 0],
@@ -9989,7 +9989,7 @@ struct ChordsData {
       }]
       }, {
       "key": "G",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [3, 1, 0, 2, 3, 0],
           "fingers": [3, 1, 0, 2, 4, 0],
@@ -10643,7 +10643,7 @@ struct ChordsData {
       }]
       }, {
       "key": "Ab",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [-1, 1, 1, 1, 1, 1],
           "fingers": [0, 1, 1, 1, 1, 1],
@@ -11311,7 +11311,7 @@ struct ChordsData {
       }]
       }, {
       "key": "Ab",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [2, -1, 1, 2, 2, 4],
           "fingers": [2, 0, 1, 3, 3, 4],
@@ -11850,7 +11850,7 @@ struct ChordsData {
       }]
       }, {
       "key": "A",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [-1, 0, 4, 4, 2, 2],
           "fingers": [0, 0, 3, 4, 1, 1],
@@ -12497,7 +12497,7 @@ struct ChordsData {
       }]
       }, {
       "key": "A",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [-1, 0, 1, 2, 0, 0],
           "fingers": [0, 0, 2, 4, 0, 0],
@@ -13301,7 +13301,7 @@ struct ChordsData {
       }]
       }, {
       "key": "Bb",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [-1, 1, 0, 0, 1, 1],
           "fingers": [0, 1, 0, 0, 2, 3],
@@ -13964,7 +13964,7 @@ struct ChordsData {
       }]
       }, {
       "key": "Bb",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [2, -1, 1, 2, 2, 4],
           "fingers": [2, 0, 1, 3, 3, 4],
@@ -14508,7 +14508,7 @@ struct ChordsData {
       }]
       }, {
       "key": "B",
-      "suffix": "69",
+      "suffix": "6/9",
       "positions": [{
           "frets": [-1, 2, 1, 1, 2, 2],
           "fingers": [0, 2, 1, 1, 3, 4],
@@ -15172,7 +15172,7 @@ struct ChordsData {
       }]
       }, {
       "key": "B",
-      "suffix": "m69",
+      "suffix": "m6/9",
       "positions": [{
           "frets": [-1, 2, 0, 1, 2, 2],
           "fingers": [0, 2, 0, 1, 3, 4],
