@@ -43,6 +43,13 @@ final class GuitarChordsTests: XCTestCase {
         XCTAssertEqual(chords.count, 43)
     }
 
+    func testWithBarres() {
+        let chords = GuitarChords.all
+        let allPositions = chords.flatMap { $0.positions }
+        let allBarres = allPositions.filter { $0.barres.count > 1 }
+        dump(allBarres)
+    }
+
     static var allTests = [
         ("testAllChords", testAllChords),
     ]
