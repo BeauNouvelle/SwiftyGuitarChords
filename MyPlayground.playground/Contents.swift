@@ -2,69 +2,6 @@ import UIKit
 import PlaygroundSupport
 import CoreText
 
-extension NSAttributedString {
-
-    func computeLetterPaths(size: CGSize) -> (paths: [UIBezierPath], positions: [CGPoint]) {
-        var letterPaths: [UIBezierPath] = []
-        var lineRects: [CGRect] = []
-        var letterPositions: [CGPoint] = []
-
-        let frameSetter = CTFramesetterCreateWithAttributedString(self as CFAttributedString)
-        let textPath = CGPath(rect: CGRect(origin: .zero, size: size), transform: nil)
-        let textFrame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, self.length), textPath, nil)
-
-        let lines = CTFrameGetLines(textFrame)
-        var origins = [CGPoint](repeating: .zero, count: CFArrayGetCount(lines))
-        CTFrameGetLineOrigins(textFrame, CFRangeMake(0, 0), &origins)
-
-        for lineIndex in 0..<CFArrayGetCount(lines) {
-            let unmanagedLine: UnsafeRawPointer = CFArrayGetValueAtIndex(lines, lineIndex)
-            let line: CTLine = unsafeBitCast(unmanagedLine, to: CTLine.self)
-            var lineOrigin = origins[lineIndex]
-            let lineBounds = CTLineGetBoundsWithOptions(line, CTLineBoundsOptions.useGlyphPathBounds)
-            lineRects.append(lineBounds)
-
-            // adjust origin for flipped coordinate system
-            lineOrigin.y = (lineBounds.height/3) - (size.height - lineOrigin.y)
-
-            let runs = CTLineGetGlyphRuns(line)
-            for runIndex in 0..<CFArrayGetCount(runs) {
-                let runPointer = CFArrayGetValueAtIndex(runs, runIndex)
-                let run = unsafeBitCast(runPointer, to: CTRun.self)
-                let attribs = CTRunGetAttributes(run)
-                let fontPointer = CFDictionaryGetValue(attribs, Unmanaged.passUnretained(kCTFontAttributeName).toOpaque())
-                let font = unsafeBitCast(fontPointer, to: CTFont.self)
-
-                let glyphCount = CTRunGetGlyphCount(run)
-                var ascents = [CGFloat](repeating: 0, count: glyphCount)
-                var descents = [CGFloat](repeating: 0, count: glyphCount)
-                var leading = [CGFloat](repeating: 0, count: glyphCount)
-                CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascents, &descents, &leading)
-
-                for glyphIndex in 0..<glyphCount {
-                    let glyphRange = CFRangeMake(glyphIndex, 1)
-                    var glyph = CGGlyph()
-                    var position = CGPoint.zero
-                    CTRunGetGlyphs(run, glyphRange, &glyph)
-                    CTRunGetPositions(run, glyphRange, &position)
-                    position.y = lineOrigin.y
-
-                    if let path = CTFontCreatePathForGlyph(font, glyph, nil) {
-                        letterPaths.append(UIBezierPath(cgPath: path))
-                        letterPositions.append(position)
-                    }
-                }
-            }
-        }
-
-        return (letterPaths, letterPositions)
-    }
-
-}
-
-
-
-
 public struct Chord: Codable {
     public let key = "B"
     public let suffix = "m9"
@@ -88,12 +25,34 @@ private let numberOfFrets = 5
 let showFingers: Bool = true
 let showChordName: Bool = true
 
+func textPath(font: UIFont, text: String, rect: CGRect, alignment: NSTextAlignment = .left, position: CGPoint) -> UIBezierPath {
+    let titleParagraphStyle = NSMutableParagraphStyle()
+    titleParagraphStyle.alignment = alignment
+
+    let paragraph = NSMutableAttributedString(string: text, attributes: [.font: font, .paragraphStyle: titleParagraphStyle])
+
+    let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
+    let titlePath = UIBezierPath()
+
+    for (index, path) in glyphPaths.paths.enumerated() {
+        let pos = glyphPaths.positions[index]
+        path.apply(CGAffineTransform(translationX: pos.x, y: pos.y))
+        titlePath.append(path)
+    }
+
+    titlePath.apply(CGAffineTransform(scaleX: 1, y: -1))
+    titlePath.apply(CGAffineTransform(translationX: position.x - titlePath.bounds.midX, y: position.y - titlePath.bounds.midY))
+    
+    return titlePath
+}
+
+
 class View: UIView {
 
     let chord = Chord()
 //    let position = ChordPosition(frets: [0, 1, 3, 3, 3, 1], fingers: [1, 1, 3, 3, 3, 4], baseFret: 3, barres: [1, 3], midi: [48, 53, 60, 65, 69, 74])
 //    let position = ChordPosition(frets: [0, 1, 2, 2, 2, 0], fingers: [0, 1, 2, 3, 4, 0], baseFret: 8, barres: [2], midi: [48, 53, 60, 65, 69, 74])
-    let position = ChordPosition(frets: [-1, 2, 0, 2, 2, 2], fingers: [0, 1, 0, 2, 3, 4], baseFret: 1, barres: [], midi: [48, 53, 60, 65, 69, 74])
+    let position = ChordPosition(frets: [-1, 2, 0, 2, 2, 2], fingers: [0, 1, 0, 2, 3, 4], baseFret: 2, barres: [], midi: [48, 53, 60, 65, 69, 74])
 
     override func draw(_ rect: CGRect) {
         UIColor.black.setStroke()
@@ -123,26 +82,12 @@ class View: UIView {
 
             if position.baseFret != 1 {
                 // Draw fret number
-                let titleParagraphStyle = NSMutableParagraphStyle()
-                titleParagraphStyle.alignment = .left
-
-                let paragraphFont = UIFont.systemFont(ofSize: fretMargin / 2)
-
-                let paragraph = NSMutableAttributedString(string: "\(position.baseFret)", attributes: [.font: paragraphFont, .paragraphStyle: titleParagraphStyle])
-
-                let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
-                let titlePath = UIBezierPath()
-
-                for (index, path) in glyphPaths.paths.enumerated() {
-                    let pos = glyphPaths.positions[index]
-                    path.apply(CGAffineTransform(translationX: pos.x, y: pos.y))
-                    titlePath.append(path)
-                }
-
-                titlePath.apply(CGAffineTransform(scaleX: 1, y: -1))
-                titlePath.apply(CGAffineTransform(translationX: stringMargin / 2 - (titlePath.bounds.size.width / 2), y: yModifier + (fretSpacing / 2) + fretMargin - (titlePath.bounds.size.height / 2)))
-
-                titlePath.fill()
+                let txtFont = UIFont.systemFont(ofSize: fretMargin / 2)
+                let txtRect = CGRect(x: 0, y: 0, width: stringMargin, height: fretSpacing)
+                let transX = stringMargin / 2
+                let transY = yModifier + (fretSpacing / 2) + fretMargin
+                let txtPath = textPath(font: txtFont, text: "\(position.baseFret)", rect: txtRect, position: CGPoint(x: transX, y: transY))
+                txtPath.fill()
             }
 
             let y = fretSpacing * CGFloat(fret) + fretMargin + yModifier
@@ -189,27 +134,14 @@ class View: UIView {
             barrePath.stroke()
 
             if showFingers {
-                let titleParagraphStyle = NSMutableParagraphStyle()
-                titleParagraphStyle.alignment = .left
-
-                let paragraphFont = UIFont.systemFont(ofSize: stringMargin)
-
-                let paragraph = NSMutableAttributedString(string: "\(barre)", attributes: [.font: paragraphFont, .paragraphStyle: titleParagraphStyle])
-
-                let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
-                let titlePath = UIBezierPath()
-
-                for (index, path) in glyphPaths.paths.enumerated() {
-                    let pos = glyphPaths.positions[index]
-                    path.apply(CGAffineTransform(translationX: pos.x, y: pos.y))
-                    titlePath.append(path)
-                }
-
-                titlePath.apply(CGAffineTransform(scaleX: 1, y: -1))
-                titlePath.apply(CGAffineTransform(translationX: startingX + ((endingX - startingX) / 2) - titlePath.bounds.midX, y: y - titlePath.bounds.midY))
-
+                let txtFont = UIFont.systemFont(ofSize: stringMargin)
+                let txtRect = CGRect(x: 0, y: 0, width: stringSpacing, height: fretSpacing)
+                let transX = startingX + ((endingX - startingX) / 2)
+                let transY = y
+                // TODO: Barre is incorrect, it needs to be the finger...
+                let txtPath = textPath(font: txtFont, text: "\(barre)", rect: txtRect, position: CGPoint(x: transX, y: transY))
                 UIColor.white.setFill()
-                titlePath.fill()
+                txtPath.fill()
                 UIColor.black.setFill()
             }
         }
@@ -269,54 +201,23 @@ class View: UIView {
             print(dotY, dotX)
 
             if showFingers {
-                let titleParagraphStyle = NSMutableParagraphStyle()
-                titleParagraphStyle.alignment = .left
-
-                let paragraphFont = UIFont.systemFont(ofSize: stringMargin)
-
-                let paragraph = NSMutableAttributedString(string: "\(position.fingers[index])", attributes: [.font: paragraphFont, .paragraphStyle: titleParagraphStyle])
-
-                let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
-                let titlePath = UIBezierPath()
-
-                for (index, path) in glyphPaths.paths.enumerated() {
-                    let pos = glyphPaths.positions[index]
-                    path.apply(CGAffineTransform(translationX: pos.x, y: pos.y))
-                    titlePath.append(path)
-                }
-
-                titlePath.apply(CGAffineTransform(scaleX: 1, y: -1))
-                titlePath.apply(CGAffineTransform(translationX: dotX - titlePath.bounds.midX, y: dotY - titlePath.bounds.midY))
-
+                let txtFont = UIFont.systemFont(ofSize: stringMargin)
+                let txtRect = CGRect(x: 0, y: 0, width: stringSpacing, height: fretSpacing)
+                let txtPath = textPath(font: txtFont, text: "\(position.fingers[index])", rect: txtRect, position: CGPoint(x: dotX, y: dotY))
                 UIColor.white.setFill()
-                titlePath.fill()
-
+                txtPath.fill()
                 UIColor.black.setFill()
             }
         }
 
         // draw chord name
         if showChordName {
-            let titleParagraphStyle = NSMutableParagraphStyle()
-            titleParagraphStyle.alignment = .left
-
-            let paragraphFont = UIFont.systemFont(ofSize: fretMargin)
-
-            let paragraph = NSMutableAttributedString(string: chord.key + " " + chord.suffix, attributes: [.font: paragraphFont, .paragraphStyle: titleParagraphStyle])
-
-            let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
-            let titlePath = UIBezierPath()
-
-            for (index, path) in glyphPaths.paths.enumerated() {
-                let pos = glyphPaths.positions[index]
-                path.apply(CGAffineTransform(translationX: pos.x, y: pos.y))
-                titlePath.append(path)
-            }
-
-            titlePath.apply(CGAffineTransform(scaleX: 1, y: -1))
-            titlePath.apply(CGAffineTransform(translationX: rect.size.width/2 - (titlePath.bounds.size.width / 2), y: yModifier / 3))
-
-            titlePath.fill()
+            let txtFont = UIFont.systemFont(ofSize: fretMargin)
+            let txtRect = CGRect(x: 0, y: 0, width: fretLength, height: fretMargin + yModifier)
+            let transX = rect.size.width / 2
+            let transY = (yModifier + fretMargin) * 0.35
+            let txtPath = textPath(font: txtFont, text: chord.key + " " + chord.suffix, rect: txtRect, position: CGPoint(x: transX, y: transY))
+            txtPath.fill()
         }
 
     }
