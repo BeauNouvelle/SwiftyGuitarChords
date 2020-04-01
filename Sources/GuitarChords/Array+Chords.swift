@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Array where Element == Chord {
+public extension Array where Element == ChordPosition {
 
     func keys() -> [GuitarChords.Key] {
         return self.map { $0.key }
@@ -17,11 +17,11 @@ public extension Array where Element == Chord {
         return self.map { $0.suffix }
     }
 
-    func matching(suffix: GuitarChords.Suffix) -> [Chord] {
+    func matching(suffix: GuitarChords.Suffix) -> [ChordPosition] {
         return self.filter { $0.suffix == suffix }
     }
 
-    func matching(key: GuitarChords.Key) -> [Chord] {
+    func matching(key: GuitarChords.Key) -> [ChordPosition] {
         return self.filter { $0.key == key }
     }
 

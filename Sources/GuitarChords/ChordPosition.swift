@@ -22,10 +22,7 @@ public struct ChordPosition: Codable {
     private let numberOfStrings = 6 - 1
     private let numberOfFrets = 5
 
-    var showFingers: Bool = true
-    var showChordName: Bool = true
-
-    public func path(size: CGSize) -> UIBezierPath {
+    public func path(size: CGSize, showFingers: Bool, showChordName: Bool) -> UIBezierPath {
         let heightMultiplyer: CGFloat = showChordName ? 1.3 : 1.2
         let rect = CGRect(x: 0, y: 0, width: 400, height: 400)
 
@@ -57,9 +54,9 @@ public struct ChordPosition: Codable {
         // draw string lines
         mainPath.append(stringPath(stringConfig: stringConfig, fretConfig: fretConfig, yModifier: yModifier))
         // draw barre
-        mainPath.append(barrePath(fretConfig: fretConfig, stringConfig: stringConfig, yModifier: yModifier))
+        mainPath.append(barrePath(fretConfig: fretConfig, stringConfig: stringConfig, yModifier: yModifier, showFingers: showFingers))
         // draw dots
-        mainPath.append(dotsPath(stringConfig: stringConfig, fretConfig: fretConfig, yModifier: yModifier))
+        mainPath.append(dotsPath(stringConfig: stringConfig, fretConfig: fretConfig, yModifier: yModifier, showFingers: showFingers))
         // draw chord name
         if showChordName {
             mainPath.append(namePath(fretConfig: fretConfig, yModifier: yModifier, x: size.width / 2))
@@ -126,7 +123,7 @@ public struct ChordPosition: Codable {
         return path
     }
     
-    func barrePath(fretConfig: LineConfig, stringConfig: LineConfig, yModifier: CGFloat) -> UIBezierPath {
+    func barrePath(fretConfig: LineConfig, stringConfig: LineConfig, yModifier: CGFloat, showFingers: Bool) -> UIBezierPath {
         let path = UIBezierPath()
 
         for barre in barres {
@@ -169,7 +166,7 @@ public struct ChordPosition: Codable {
         return path
     }
     
-    private func dotsPath(stringConfig: LineConfig, fretConfig: LineConfig, yModifier: CGFloat) -> UIBezierPath {
+    private func dotsPath(stringConfig: LineConfig, fretConfig: LineConfig, yModifier: CGFloat, showFingers: Bool) -> UIBezierPath {
         let path = UIBezierPath()
 
         for index in 0..<frets.count {

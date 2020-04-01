@@ -83,15 +83,17 @@ public struct GuitarChords {
         case minorSlashGSharp = "m/G#"
     }
 
-    public static var all: [Chord] {
+    public static var all: [ChordPosition] {
         guard let data = ChordsData.data else {
             print("there is no chord data")
             return []
         }
         do {
-            let allChords = try JSONDecoder().decode([Chord].self, from: data)
+            let allChords = try JSONDecoder().decode([ChordPosition].self, from: data)
             return allChords
         } catch {
+            print(error)
+
             #if DEBUG
             print(error)
             #endif
