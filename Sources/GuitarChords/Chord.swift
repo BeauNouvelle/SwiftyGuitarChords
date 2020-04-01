@@ -14,8 +14,11 @@ public struct Chord: Codable {
     public let positions: [ChordPosition]
     public var chosenPosition: ChordPosition?
 
-    private let numberOfStrings = 6
+    private let numberOfStrings = 6 - 1
     private let numberOfFrets = 5
+
+    var showFingers: Bool = true
+    var showChordName: Bool = true
 
     public func path(size: CGSize) -> UIBezierPath {
         let path = UIBezierPath()

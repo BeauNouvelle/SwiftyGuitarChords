@@ -25,34 +25,76 @@ private let numberOfFrets = 5
 let showFingers: Bool = true
 let showChordName: Bool = true
 
-func textPath(font: UIFont, text: String, rect: CGRect, alignment: NSTextAlignment = .left, position: CGPoint) -> UIBezierPath {
-    let titleParagraphStyle = NSMutableParagraphStyle()
-    titleParagraphStyle.alignment = alignment
+extension String {
+    func path(font: UIFont, rect: CGRect, alignment: NSTextAlignment = .left, position: CGPoint) -> UIBezierPath {
+        let titleParagraphStyle = NSMutableParagraphStyle()
+        titleParagraphStyle.alignment = alignment
 
-    let paragraph = NSMutableAttributedString(string: text, attributes: [.font: font, .paragraphStyle: titleParagraphStyle])
+        let paragraph = NSMutableAttributedString(string: self, attributes: [.font: font, .paragraphStyle: titleParagraphStyle])
 
-    let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
-    let titlePath = UIBezierPath()
+        let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
+        let titlePath = UIBezierPath()
 
-    for (index, path) in glyphPaths.paths.enumerated() {
-        let pos = glyphPaths.positions[index]
-        path.apply(CGAffineTransform(translationX: pos.x, y: pos.y))
-        titlePath.append(path)
+        for (index, path) in glyphPaths.paths.enumerated() {
+            let pos = glyphPaths.positions[index]
+            path.apply(CGAffineTransform(translationX: pos.x, y: pos.y))
+            titlePath.append(path)
+        }
+
+        titlePath.apply(CGAffineTransform(scaleX: 1, y: -1))
+        titlePath.apply(CGAffineTransform(translationX: position.x - titlePath.bounds.midX, y: position.y - titlePath.bounds.midY))
+
+        return titlePath
     }
-
-    titlePath.apply(CGAffineTransform(scaleX: 1, y: -1))
-    titlePath.apply(CGAffineTransform(translationX: position.x - titlePath.bounds.midX, y: position.y - titlePath.bounds.midY))
-    
-    return titlePath
 }
 
 
 class View: UIView {
 
     let chord = Chord()
-//    let position = ChordPosition(frets: [0, 1, 3, 3, 3, 1], fingers: [1, 1, 3, 3, 3, 4], baseFret: 3, barres: [1, 3], midi: [48, 53, 60, 65, 69, 74])
-//    let position = ChordPosition(frets: [0, 1, 2, 2, 2, 0], fingers: [0, 1, 2, 3, 4, 0], baseFret: 8, barres: [2], midi: [48, 53, 60, 65, 69, 74])
-    let position = ChordPosition(frets: [-1, 2, 0, 2, 2, 2], fingers: [0, 1, 0, 2, 3, 4], baseFret: 2, barres: [], midi: [48, 53, 60, 65, 69, 74])
+    let position = ChordPosition(frets: [-1, 2, 0, 2, 2, 2], fingers: [0, 1, 0, 2, 3, 4], baseFret: 1, barres: [], midi: [48, 53, 60, 65, 69, 74])
+
+    func fretPath(baseFret: Int, fretConfig: LineConfig, stringConfig: LineConfig, yModifier: CGFloat) -> UIBezierPath {
+        let path = UIBezierPath()
+
+        for fret in 0...fretConfig.count {
+            let fretPath = UIBezierPath()
+            fretPath.lineCapStyle = .square
+            let lineWidth: CGFloat
+
+            if position.baseFret == 1 && fret == 0 {
+                lineWidth = rect.size.height / 50
+            } else {
+                lineWidth = rect.size.height / 150
+            }
+
+            if position.baseFret != 1 {
+                // Draw fret number
+                let txtFont = UIFont.systemFont(ofSize: fretConfig.margin / 2)
+                let txtRect = CGRect(x: 0, y: 0, width: stringConfig.margin, height: fretConfig.spacing)
+                let transX = stringConfig.margin / 2
+                let transY = yModifier + (fretConfig.spacing / 2) + fretConfig.margin
+                let txtPath = "\(position.baseFret)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
+                txtPath.fill()
+            }
+
+            let y = fretConfig.spacing * CGFloat(fret) + fretConfig.margin + yModifier
+            fretPath.move(to: CGPoint(x: stringConfig.margin, y: y))
+            fretPath.addLine(to: CGPoint(x: fretConfig.length + stringConfig.margin, y: y))
+            fretPath.lineWidth = lineWidth
+            fretPath.stroke()
+            path.append(fretPath)
+        }
+
+        return path
+    }
+
+    struct LineConfig {
+        let spacing: CGFloat
+        let margin: CGFloat
+        let length: CGFloat
+        let count: Int
+    }
 
     override func draw(_ rect: CGRect) {
         UIColor.black.setStroke()
@@ -67,36 +109,11 @@ class View: UIView {
         let fretSpacing = stringLength / CGFloat(numberOfFrets)
         let stringSpacing = fretLength / CGFloat(numberOfStrings)
 
+        let fretConfig = LineConfig(spacing: fretSpacing, margin: fretMargin, length: fretLength, count: numberOfFrets)
+        let stringConfig = LineConfig(spacing: stringSpacing, margin: stringMargin, length: stringLength, count: numberOfStrings)
+
         // draw fret lines
-
-        for fret in 0...numberOfFrets {
-            let fretPath = UIBezierPath()
-            fretPath.lineCapStyle = .square
-            let lineWidth: CGFloat
-
-            if position.baseFret == 1 && fret == 0 {
-                lineWidth = rect.size.height / 50
-            } else {
-                lineWidth = rect.size.height / 150
-            }
-
-            if position.baseFret != 1 {
-                // Draw fret number
-                let txtFont = UIFont.systemFont(ofSize: fretMargin / 2)
-                let txtRect = CGRect(x: 0, y: 0, width: stringMargin, height: fretSpacing)
-                let transX = stringMargin / 2
-                let transY = yModifier + (fretSpacing / 2) + fretMargin
-                let txtPath = textPath(font: txtFont, text: "\(position.baseFret)", rect: txtRect, position: CGPoint(x: transX, y: transY))
-                txtPath.fill()
-            }
-
-            let y = fretSpacing * CGFloat(fret) + fretMargin + yModifier
-            fretPath.move(to: CGPoint(x: stringMargin, y: y))
-            fretPath.addLine(to: CGPoint(x: fretLength + stringMargin, y: y))
-            fretPath.lineWidth = lineWidth
-
-            fretPath.stroke()
-        }
+        fretPath(baseFret: position.baseFret, fretConfig: fretConfig, stringConfig: stringConfig, yModifier: yModifier)
 
         // draw string lines
         let stringPath = UIBezierPath()
@@ -139,7 +156,7 @@ class View: UIView {
                 let transX = startingX + ((endingX - startingX) / 2)
                 let transY = y
                 // TODO: Barre is incorrect, it needs to be the finger...
-                let txtPath = textPath(font: txtFont, text: "\(barre)", rect: txtRect, position: CGPoint(x: transX, y: transY))
+                let txtPath = "\(barre)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
                 UIColor.white.setFill()
                 txtPath.fill()
                 UIColor.black.setFill()
@@ -203,7 +220,7 @@ class View: UIView {
             if showFingers {
                 let txtFont = UIFont.systemFont(ofSize: stringMargin)
                 let txtRect = CGRect(x: 0, y: 0, width: stringSpacing, height: fretSpacing)
-                let txtPath = textPath(font: txtFont, text: "\(position.fingers[index])", rect: txtRect, position: CGPoint(x: dotX, y: dotY))
+                let txtPath = "\(position.fingers[index])".path(font: txtFont, rect: txtRect, position: CGPoint(x: dotX, y: dotY))
                 UIColor.white.setFill()
                 txtPath.fill()
                 UIColor.black.setFill()
@@ -216,7 +233,7 @@ class View: UIView {
             let txtRect = CGRect(x: 0, y: 0, width: fretLength, height: fretMargin + yModifier)
             let transX = rect.size.width / 2
             let transY = (yModifier + fretMargin) * 0.35
-            let txtPath = textPath(font: txtFont, text: chord.key + " " + chord.suffix, rect: txtRect, position: CGPoint(x: transX, y: transY))
+            let txtPath = (chord.key + " " + chord.suffix).path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
             txtPath.fill()
         }
 
