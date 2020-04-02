@@ -38,6 +38,7 @@ public struct ChordPosition: Codable {
         let fretLength = size.width - (stringMargin * 2)
         let stringLength = size.height - (fretMargin * (showChordName ? 2.8 : 2))
         let yModifier = showChordName ? fretMargin * 1.2 : 0
+        let xModifier = rect.origin.x
 
         let fretSpacing = stringLength / CGFloat(numberOfFrets)
         let stringSpacing = fretLength / CGFloat(numberOfStrings)
@@ -57,7 +58,7 @@ public struct ChordPosition: Codable {
         mainPath.append(dotsPath(stringConfig: stringConfig, fretConfig: fretConfig, yModifier: yModifier, showFingers: showFingers))
         // draw chord name
         if showChordName {
-            mainPath.append(namePath(fretConfig: fretConfig, yModifier: yModifier, x: size.width / 2))
+            mainPath.append(namePath(fretConfig: fretConfig, yModifier: yModifier, x: size.width / 2 + xModifier))
         }
         
         return mainPath
