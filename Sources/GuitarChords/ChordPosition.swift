@@ -37,8 +37,7 @@ public struct ChordPosition: Codable {
         
         let fretLength = size.width - (stringMargin * 2)
         let stringLength = size.height - (fretMargin * (showChordName ? 2.8 : 2))
-        let yModifier = showChordName ? fretMargin * 1.2 : 0
-        let xModifier = rect.origin.x
+        let origin = CGPoint(x: rect.origin.x, y: showChordName ? fretMargin * 1.2 : 0)
 
         let fretSpacing = stringLength / CGFloat(numberOfFrets)
         let stringSpacing = fretLength / CGFloat(numberOfStrings)
@@ -49,45 +48,44 @@ public struct ChordPosition: Codable {
 
         let mainPath = UIBezierPath()
         // draw fret lines
-        mainPath.append(fretPath(fretConfig: fretConfig, stringConfig: stringConfig, yModifier: yModifier))
+        mainPath.append(fretPath(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin))
         // draw string lines
-        mainPath.append(stringPath(stringConfig: stringConfig, fretConfig: fretConfig, yModifier: yModifier))
+        mainPath.append(stringPath(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin))
         // draw barre
-        mainPath.append(barrePath(fretConfig: fretConfig, stringConfig: stringConfig, yModifier: yModifier, showFingers: showFingers))
+        mainPath.append(barrePath(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers))
         // draw dots
-        mainPath.append(dotsPath(stringConfig: stringConfig, fretConfig: fretConfig, yModifier: yModifier, showFingers: showFingers))
+        mainPath.append(dotsPath(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers))
         // draw chord name
         if showChordName {
-            mainPath.append(namePath(fretConfig: fretConfig, yModifier: yModifier, x: size.width / 2 + xModifier))
+            mainPath.append(namePath(fretConfig: fretConfig, origin: origin, center: size.width / 2 + origin.x))
         }
         
         return mainPath
     }
     
-    private func namePath(fretConfig: LineConfig, yModifier: CGFloat, x: CGFloat) -> UIBezierPath {
+    private func namePath(fretConfig: LineConfig, origin: CGPoint, center: CGFloat) -> UIBezierPath {
         let txtFont = UIFont.systemFont(ofSize: fretConfig.margin)
-        let txtRect = CGRect(x: 0, y: 0, width: fretConfig.length, height: fretConfig.margin + yModifier)
-        let transX = x
-        let transY = (yModifier + fretConfig.margin) * 0.35
-        let txtPath = (key.rawValue + " " + suffix.rawValue).path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
+        let txtRect = CGRect(x: 0, y: 0, width: fretConfig.length, height: fretConfig.margin + origin.y)
+        let transY = (origin.y + fretConfig.margin) * 0.35
+        let txtPath = (key.rawValue + " " + suffix.rawValue).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
         txtPath.fill()
         return txtPath
     }
     
-    private func stringPath(stringConfig: LineConfig, fretConfig: LineConfig, yModifier: CGFloat) -> UIBezierPath {
+    private func stringPath(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint) -> UIBezierPath {
         let path = UIBezierPath()
         path.lineWidth = stringConfig.spacing / 25
         for string in 0...stringConfig.count {
-            let x = stringConfig.spacing * CGFloat(string) + stringConfig.margin
-            path.move(to: CGPoint(x: x, y: fretConfig.margin + yModifier))
-            path.addLine(to: CGPoint(x: x, y: stringConfig.length + fretConfig.margin + yModifier))
+            let x = stringConfig.spacing * CGFloat(string) + stringConfig.margin + origin.x
+            path.move(to: CGPoint(x: x, y: fretConfig.margin + origin.y))
+            path.addLine(to: CGPoint(x: x, y: stringConfig.length + fretConfig.margin + origin.y))
         }
 
         path.stroke()
         return path
     }
     
-    private func fretPath(fretConfig: LineConfig, stringConfig: LineConfig, yModifier: CGFloat) -> UIBezierPath {
+    private func fretPath(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint) -> UIBezierPath {
         let path = UIBezierPath()
 
         for fret in 0...fretConfig.count {
@@ -105,14 +103,14 @@ public struct ChordPosition: Codable {
             if baseFret != 1 {
                 let txtFont = UIFont.systemFont(ofSize: fretConfig.margin / 2)
                 let txtRect = CGRect(x: 0, y: 0, width: stringConfig.margin, height: fretConfig.spacing)
-                let transX = stringConfig.margin / 2
-                let transY = yModifier + (fretConfig.spacing / 2) + fretConfig.margin
+                let transX = stringConfig.margin / 2 + origin.x
+                let transY = origin.y + (fretConfig.spacing / 2) + fretConfig.margin
                 let txtPath = "\(baseFret)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
                 txtPath.fill()
             }
 
-            let y = fretConfig.spacing * CGFloat(fret) + fretConfig.margin + yModifier
-            fretPath.move(to: CGPoint(x: stringConfig.margin, y: y))
+            let y = fretConfig.spacing * CGFloat(fret) + fretConfig.margin + origin.y
+            fretPath.move(to: CGPoint(x: stringConfig.margin + origin.x, y: y))
             fretPath.addLine(to: CGPoint(x: fretConfig.length + stringConfig.margin, y: y))
             fretPath.lineWidth = lineWidth
             fretPath.stroke()
@@ -122,7 +120,7 @@ public struct ChordPosition: Codable {
         return path
     }
     
-    func barrePath(fretConfig: LineConfig, stringConfig: LineConfig, yModifier: CGFloat, showFingers: Bool) -> UIBezierPath {
+    func barrePath(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> UIBezierPath {
         let path = UIBezierPath()
 
         for barre in barres {
@@ -136,8 +134,8 @@ public struct ChordPosition: Codable {
                 }
             }
 
-            let startingX = CGFloat(frets.firstIndex(of: barre) ?? 0) * stringConfig.spacing + stringConfig.margin
-            let y = CGFloat(barre) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + yModifier
+            let startingX = CGFloat(frets.firstIndex(of: barre) ?? 0) * stringConfig.spacing + stringConfig.margin + origin.x
+            let y = CGFloat(barre) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y
 
             barrePath.move(to: CGPoint(x: startingX, y: y))
 
@@ -165,7 +163,7 @@ public struct ChordPosition: Codable {
         return path
     }
     
-    private func dotsPath(stringConfig: LineConfig, fretConfig: LineConfig, yModifier: CGFloat, showFingers: Bool) -> UIBezierPath {
+    private func dotsPath(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> UIBezierPath {
         let path = UIBezierPath()
 
         for index in 0..<frets.count {
@@ -174,8 +172,8 @@ public struct ChordPosition: Codable {
             // Draw circle above nut
             if fret == 0 {
                 let size = fretConfig.spacing * 0.33
-                let circleX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2
-                let circleY = fretConfig.margin - size * 1.6 + yModifier
+                let circleX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x
+                let circleY = fretConfig.margin - size * 1.6 + origin.y
 
                 let center = CGPoint(x: circleX, y: circleY)
                 let frame = CGRect(origin: center, size: CGSize(width: size, height: size))
@@ -192,8 +190,8 @@ public struct ChordPosition: Codable {
             // Draw cross above nut
             if fret == -1 {
                 let size = fretConfig.spacing * 0.33
-                let crossX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2
-                let crossY = fretConfig.margin - size * 1.6 + yModifier
+                let crossX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x
+                let crossY = fretConfig.margin - size * 1.6 + origin.y
 
                 let center = CGPoint(x: crossX, y: crossY)
                 let frame = CGRect(origin: center, size: CGSize(width: size, height: size))
@@ -217,8 +215,8 @@ public struct ChordPosition: Codable {
                 continue
             }
 
-            let dotY = CGFloat(fret) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + yModifier
-            let dotX = CGFloat(index) * stringConfig.spacing + stringConfig.margin
+            let dotY = CGFloat(fret) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y
+            let dotX = CGFloat(index) * stringConfig.spacing + stringConfig.margin + origin.x
 
             let dotPath = UIBezierPath()
             dotPath.addArc(withCenter: CGPoint(x: dotX, y: dotY), radius: fretConfig.spacing * 0.35, startAngle: 0, endAngle: .pi * 2, clockwise: true)
