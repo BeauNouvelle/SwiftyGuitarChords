@@ -22,12 +22,10 @@ public struct ChordPosition: Codable {
     private let numberOfStrings = 6 - 1
     private let numberOfFrets = 5
 
-    public func path(size: CGSize, showFingers: Bool, showChordName: Bool) -> UIBezierPath {
+    public func path(rect: CGRect, showFingers: Bool, showChordName: Bool) -> UIBezierPath {
         let heightMultiplyer: CGFloat = showChordName ? 1.3 : 1.2
-        let rect = CGRect(x: 0, y: 0, width: 400, height: 400)
-
-        let hScale = rect.height / heightMultiplyer
-        let scale = min(hScale, rect.width)
+        let horScale = rect.height / heightMultiplyer
+        let scale = min(horScale, rect.width)
         let newHeight = scale * heightMultiplyer
 
         let size = CGSize(width: scale, height: newHeight)
