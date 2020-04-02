@@ -110,8 +110,9 @@ public struct ChordPosition: Codable {
             }
 
             let y = fretConfig.spacing * CGFloat(fret) + fretConfig.margin + origin.y
-            fretPath.move(to: CGPoint(x: stringConfig.margin + origin.x, y: y))
-            fretPath.addLine(to: CGPoint(x: fretConfig.length + stringConfig.margin, y: y))
+            let x = origin.x + stringConfig.margin
+            fretPath.move(to: CGPoint(x: x, y: y))
+            fretPath.addLine(to: CGPoint(x: fretConfig.length + x, y: y))
             fretPath.lineWidth = lineWidth
             fretPath.stroke()
             path.append(fretPath)
