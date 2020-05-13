@@ -23,10 +23,10 @@ public struct ChordPosition: Codable {
     private let numberOfFrets = 5
 
     public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool) -> CAShapeLayer {
-        let heightMultiplyer: CGFloat = showChordName ? 1.3 : 1.2
-        let horScale = rect.height / heightMultiplyer
+        let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
+        let horScale = rect.height / heightMultiplier
         let scale = min(horScale, rect.width)
-        let newHeight = scale * heightMultiplyer
+        let newHeight = scale * heightMultiplier
         let size = CGSize(width: scale, height: newHeight)
 
         let stringMargin = size.width / 10
@@ -93,12 +93,15 @@ public struct ChordPosition: Codable {
 
             // Draw fret number
             if baseFret != 1 {
-                let txtFont = UIFont.systemFont(ofSize: fretConfig.margin / 2)
+                let txtLayer = CAShapeLayer()
+                let txtFont = UIFont.systemFont(ofSize: fretConfig.margin * 0.7)
                 let txtRect = CGRect(x: 0, y: 0, width: stringConfig.margin, height: fretConfig.spacing)
-                let transX = stringConfig.margin / 2 + origin.x
+                let transX = stringConfig.margin / 5 + origin.x
                 let transY = origin.y + (fretConfig.spacing / 2) + fretConfig.margin
                 let txtPath = "\(baseFret)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
-                txtPath.fill()
+                txtLayer.path = txtPath.cgPath
+                txtLayer.fillColor = UIColor.black.cgColor
+                fretLayer.addSublayer(txtLayer)
             }
 
             let y = fretConfig.spacing * CGFloat(fret) + fretConfig.margin + origin.y
@@ -120,7 +123,7 @@ public struct ChordPosition: Codable {
     }
 
     private func nameLayer(fretConfig: LineConfig, origin: CGPoint, center: CGFloat) -> CAShapeLayer {
-        let txtFont = UIFont.systemFont(ofSize: fretConfig.margin)
+        let txtFont = UIFont.boldSystemFont(ofSize: fretConfig.margin)
         let txtRect = CGRect(x: 0, y: 0, width: fretConfig.length, height: fretConfig.margin + origin.y)
         let transY = (origin.y + fretConfig.margin) * 0.35
         let txtPath = (key.rawValue + " " + suffix.rawValue).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
@@ -144,18 +147,19 @@ public struct ChordPosition: Codable {
                 }
             }
 
-            let startingX = CGFloat(frets.firstIndex(of: barre) ?? 0) * stringConfig.spacing + stringConfig.margin + origin.x
+            let offset = stringConfig.spacing / 7
+            let startingX = CGFloat(frets.firstIndex(of: barre) ?? 0) * stringConfig.spacing + stringConfig.margin + (origin.x + offset)
             let y = CGFloat(barre) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y
 
             barrePath.move(to: CGPoint(x: startingX, y: y))
 
-            let endingX = startingX + (stringConfig.spacing * CGFloat(length)) - stringConfig.spacing
+            let endingX = startingX + (stringConfig.spacing * CGFloat(length)) - stringConfig.spacing - (offset * 2)
             barrePath.addLine(to: CGPoint(x: endingX, y: y))
 
             let barreLayer = CAShapeLayer()
             barreLayer.path = barrePath.cgPath
             barreLayer.lineCap = .round
-            barreLayer.lineWidth = fretConfig.spacing * 0.7
+            barreLayer.lineWidth = fretConfig.spacing * 0.65
             barreLayer.strokeColor = UIColor.black.cgColor
 
             layer.addSublayer(barreLayer)
