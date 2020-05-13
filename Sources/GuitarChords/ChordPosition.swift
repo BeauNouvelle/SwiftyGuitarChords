@@ -22,19 +22,16 @@ public struct ChordPosition: Codable {
     private let numberOfStrings = 6 - 1
     private let numberOfFrets = 5
 
-    public func path(rect: CGRect, showFingers: Bool, showChordName: Bool) -> UIBezierPath {
+    public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool) -> CAShapeLayer {
         let heightMultiplyer: CGFloat = showChordName ? 1.3 : 1.2
         let horScale = rect.height / heightMultiplyer
         let scale = min(horScale, rect.width)
         let newHeight = scale * heightMultiplyer
-
         let size = CGSize(width: scale, height: newHeight)
-        
-        UIColor.black.setStroke()
 
         let stringMargin = size.width / 10
         let fretMargin = size.height / 10
-        
+
         let fretLength = size.width - (stringMargin * 2)
         let stringLength = size.height - (fretMargin * (showChordName ? 2.8 : 2))
         let origin = CGPoint(x: rect.origin.x, y: showChordName ? fretMargin * 1.2 : 0)
@@ -42,61 +39,56 @@ public struct ChordPosition: Codable {
         let fretSpacing = stringLength / CGFloat(numberOfFrets)
         let stringSpacing = fretLength / CGFloat(numberOfStrings)
 
-        // todo: should i use end and start points of the line instead of passing in length?
         let fretConfig = LineConfig(spacing: fretSpacing, margin: fretMargin, length: fretLength, count: numberOfFrets)
         let stringConfig = LineConfig(spacing: stringSpacing, margin: stringMargin, length: stringLength, count: numberOfStrings)
 
-        let mainPath = UIBezierPath()
-        // draw fret lines
-        mainPath.append(fretPath(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin))
-        // draw string lines
-        mainPath.append(stringPath(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin))
-        // draw barre
-        mainPath.append(barrePath(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers))
-        // draw dots
-        mainPath.append(dotsPath(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers))
-        // draw chord name
+        let layer = CAShapeLayer()
+        let stringsAndFrets = stringsAndFretsLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin)
+        let barre = barreLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers)
+
+        layer.addSublayer(stringsAndFrets)
+        layer.addSublayer(barre)
+
         if showChordName {
-            mainPath.append(namePath(fretConfig: fretConfig, origin: origin, center: size.width / 2 + origin.x))
-        }
-        
-        return mainPath
-    }
-    
-    private func namePath(fretConfig: LineConfig, origin: CGPoint, center: CGFloat) -> UIBezierPath {
-        let txtFont = UIFont.systemFont(ofSize: fretConfig.margin)
-        let txtRect = CGRect(x: 0, y: 0, width: fretConfig.length, height: fretConfig.margin + origin.y)
-        let transY = (origin.y + fretConfig.margin) * 0.35
-        let txtPath = (key.rawValue + " " + suffix.rawValue).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
-        txtPath.fill()
-        return txtPath
-    }
-    
-    private func stringPath(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint) -> UIBezierPath {
-        let path = UIBezierPath()
-        path.lineWidth = stringConfig.spacing / 25
-        for string in 0...stringConfig.count {
-            let x = stringConfig.spacing * CGFloat(string) + stringConfig.margin + origin.x
-            path.move(to: CGPoint(x: x, y: fretConfig.margin + origin.y))
-            path.addLine(to: CGPoint(x: x, y: stringConfig.length + fretConfig.margin + origin.y))
+            let shapeLayer = nameLayer(fretConfig: fretConfig, origin: origin, center: size.width / 2 + origin.x)
+            layer.addSublayer(shapeLayer)
         }
 
-        path.stroke()
-        return path
+        layer.frame = CGRect(x: 0, y: 0, width: scale, height: newHeight)
+//        layer.frame = layer.sublayers?.reduce(CGRect.null) { $0.union($1.frame) } ?? .zero
+
+        return layer
     }
-    
-    private func fretPath(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint) -> UIBezierPath {
-        let path = UIBezierPath()
+
+    private func stringsAndFretsLayer(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint) -> CAShapeLayer {
+        let layer = CAShapeLayer()
+
+        // Strings
+        let stringPath = UIBezierPath()
+
+        for string in 0...stringConfig.count {
+            let x = stringConfig.spacing * CGFloat(string) + stringConfig.margin + origin.x
+            stringPath.move(to: CGPoint(x: x, y: fretConfig.margin + origin.y))
+            stringPath.addLine(to: CGPoint(x: x, y: stringConfig.length + fretConfig.margin + origin.y))
+        }
+
+        let stringLayer = CAShapeLayer()
+        stringLayer.path = stringPath.cgPath
+        stringLayer.lineWidth = stringConfig.spacing / 24
+        stringLayer.strokeColor = UIColor.black.cgColor
+        layer.addSublayer(stringLayer)
+
+        // Frets
+        let fretLayer = CAShapeLayer()
 
         for fret in 0...fretConfig.count {
             let fretPath = UIBezierPath()
-            fretPath.lineCapStyle = .square
             let lineWidth: CGFloat
 
             if baseFret == 1 && fret == 0 {
                 lineWidth = fretConfig.spacing / 5
             } else {
-                lineWidth = fretConfig.spacing / 25
+                lineWidth = fretConfig.spacing / 24
             }
 
             // Draw fret number
@@ -113,20 +105,37 @@ public struct ChordPosition: Codable {
             let x = origin.x + stringConfig.margin
             fretPath.move(to: CGPoint(x: x, y: y))
             fretPath.addLine(to: CGPoint(x: fretConfig.length + x, y: y))
-            fretPath.lineWidth = lineWidth
-            fretPath.stroke()
-            path.append(fretPath)
+
+            let fret = CAShapeLayer()
+            fret.path = fretPath.cgPath
+            fret.lineWidth = lineWidth
+            fret.lineCap = .square
+            fret.strokeColor = UIColor.black.cgColor
+            fretLayer.addSublayer(fret)
         }
 
-        return path
+        layer.addSublayer(fretLayer)
+
+        return layer
     }
-    
-    func barrePath(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> UIBezierPath {
-        let path = UIBezierPath()
+
+    private func nameLayer(fretConfig: LineConfig, origin: CGPoint, center: CGFloat) -> CAShapeLayer {
+        let txtFont = UIFont.systemFont(ofSize: fretConfig.margin)
+        let txtRect = CGRect(x: 0, y: 0, width: fretConfig.length, height: fretConfig.margin + origin.y)
+        let transY = (origin.y + fretConfig.margin) * 0.35
+        let txtPath = (key.rawValue + " " + suffix.rawValue).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
+        let shape = CAShapeLayer()
+        shape.path = txtPath.cgPath
+        shape.fillColor = UIColor.black.cgColor
+        return shape
+    }
+
+    private func barreLayer(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> CAShapeLayer {
+        let layer = CAShapeLayer()
 
         for barre in barres {
             let barrePath = UIBezierPath()
-            barrePath.lineWidth = fretConfig.spacing * 0.7
+
             // draw barre behind all frets that are above the barre chord
             var length = 0
             for dot in frets {
@@ -143,25 +152,30 @@ public struct ChordPosition: Codable {
             let endingX = startingX + (stringConfig.spacing * CGFloat(length)) - stringConfig.spacing
             barrePath.addLine(to: CGPoint(x: endingX, y: y))
 
-            barrePath.lineCapStyle = .round
-            barrePath.stroke()
+            let barreLayer = CAShapeLayer()
+            barreLayer.path = barrePath.cgPath
+            barreLayer.lineCap = .round
+            barreLayer.lineWidth = fretConfig.spacing * 0.7
+            barreLayer.strokeColor = UIColor.black.cgColor
+
+            layer.addSublayer(barreLayer)
 
             if showFingers {
+                let fingerLayer = CAShapeLayer()
                 let txtFont = UIFont.systemFont(ofSize: stringConfig.margin)
                 let txtRect = CGRect(x: 0, y: 0, width: stringConfig.spacing, height: fretConfig.spacing)
                 let transX = startingX + ((endingX - startingX) / 2)
                 let transY = y
-                // TODO: Barre is incorrect, it needs to be the finger...
-                let txtPath = "\(barre)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
-                UIColor.white.setFill()
-                txtPath.fill()
-                UIColor.black.setFill()
-            }
 
-            path.append(barrePath)
+                // TODO: Barre number is incorrect, it needs to be the number of the finger...
+                let txtPath = "\(barre)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
+                fingerLayer.path = txtPath.cgPath
+                fingerLayer.fillColor = UIColor.white.cgColor
+                layer.addSublayer(fingerLayer)
+            }
         }
 
-        return path
+        return layer
     }
     
     private func dotsPath(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> UIBezierPath {
