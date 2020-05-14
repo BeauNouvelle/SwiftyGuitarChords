@@ -45,9 +45,11 @@ public struct ChordPosition: Codable {
         let layer = CAShapeLayer()
         let stringsAndFrets = stringsAndFretsLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin)
         let barre = barreLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers)
+        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers)
 
         layer.addSublayer(stringsAndFrets)
         layer.addSublayer(barre)
+        layer.addSublayer(dots)
 
         if showChordName {
             let shapeLayer = nameLayer(fretConfig: fretConfig, origin: origin, center: size.width / 2 + origin.x)
@@ -55,7 +57,6 @@ public struct ChordPosition: Codable {
         }
 
         layer.frame = CGRect(x: 0, y: 0, width: scale, height: newHeight)
-//        layer.frame = layer.sublayers?.reduce(CGRect.null) { $0.union($1.frame) } ?? .zero
 
         return layer
     }
@@ -181,9 +182,9 @@ public struct ChordPosition: Codable {
 
         return layer
     }
-    
-    private func dotsPath(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> UIBezierPath {
-        let path = UIBezierPath()
+
+    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> CAShapeLayer {
+        let layer = CAShapeLayer()
 
         for index in 0..<frets.count {
             let fret = frets[index]
@@ -198,10 +199,12 @@ public struct ChordPosition: Codable {
                 let frame = CGRect(origin: center, size: CGSize(width: size, height: size))
 
                 let circle = UIBezierPath(ovalIn: frame)
-                circle.lineWidth = fretConfig.spacing / 25
-                circle.stroke()
 
-                path.append(circle)
+                let circleLayer = CAShapeLayer()
+                circleLayer.path = circle.cgPath
+                circleLayer.lineWidth = fretConfig.spacing / 24
+                circleLayer.strokeColor = UIColor.black.cgColor
+                layer.addSublayer(circleLayer)
 
                 continue
             }
@@ -216,7 +219,6 @@ public struct ChordPosition: Codable {
                 let frame = CGRect(origin: center, size: CGSize(width: size, height: size))
 
                 let cross = UIBezierPath()
-                cross.lineWidth = fretConfig.spacing / 25
 
                 cross.move(to: CGPoint(x: frame.minX, y: frame.minY))
                 cross.addLine(to: CGPoint(x: frame.maxX, y: frame.maxY))
@@ -224,8 +226,12 @@ public struct ChordPosition: Codable {
                 cross.move(to: CGPoint(x: frame.maxX, y: frame.minY))
                 cross.addLine(to: CGPoint(x: frame.minX, y: frame.maxY))
 
-                cross.stroke()
-                path.append(cross)
+                let crossLayer = CAShapeLayer()
+                crossLayer.path = cross.cgPath
+                crossLayer.lineWidth = fretConfig.spacing / 24
+                crossLayer.strokeColor = UIColor.black.cgColor
+
+                layer.addSublayer(crossLayer)
 
                 continue
             }
@@ -239,21 +245,25 @@ public struct ChordPosition: Codable {
 
             let dotPath = UIBezierPath()
             dotPath.addArc(withCenter: CGPoint(x: dotX, y: dotY), radius: fretConfig.spacing * 0.35, startAngle: 0, endAngle: .pi * 2, clockwise: true)
-            dotPath.stroke()
-            dotPath.fill()
+
+            let dotLayer = CAShapeLayer()
+            dotLayer.path = dotPath.cgPath
+            dotLayer.fillColor = UIColor.black.cgColor
+            layer.addSublayer(dotLayer)
 
             if showFingers {
-                let txtFont = UIFont.systemFont(ofSize: stringConfig.margin)
+                let txtFont = UIFont.systemFont(ofSize: stringConfig.margin, weight: .medium)
                 let txtRect = CGRect(x: 0, y: 0, width: stringConfig.spacing, height: fretConfig.spacing)
                 let txtPath = "\(fingers[index])".path(font: txtFont, rect: txtRect, position: CGPoint(x: dotX, y: dotY))
-                UIColor.white.setFill()
-                txtPath.fill()
-                UIColor.black.setFill()
-                path.append(txtPath)
+                let txtLayer = CAShapeLayer()
+                txtLayer.path = txtPath.cgPath
+                txtLayer.fillColor = UIColor.white.cgColor
+                layer.addSublayer(txtLayer)
             }
 
-            path.append(dotPath)
         }
-        return path
+
+        return layer
     }
+
 }
