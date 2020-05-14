@@ -123,7 +123,7 @@ public struct ChordPosition: Codable {
     }
 
     private func nameLayer(fretConfig: LineConfig, origin: CGPoint, center: CGFloat) -> CAShapeLayer {
-        let txtFont = UIFont.boldSystemFont(ofSize: fretConfig.margin)
+        let txtFont = UIFont.systemFont(ofSize: fretConfig.margin, weight: .medium)
         let txtRect = CGRect(x: 0, y: 0, width: fretConfig.length, height: fretConfig.margin + origin.y)
         let transY = (origin.y + fretConfig.margin) * 0.35
         let txtPath = (key.rawValue + " " + suffix.rawValue).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
@@ -166,7 +166,7 @@ public struct ChordPosition: Codable {
 
             if showFingers {
                 let fingerLayer = CAShapeLayer()
-                let txtFont = UIFont.systemFont(ofSize: stringConfig.margin)
+                let txtFont = UIFont.systemFont(ofSize: stringConfig.margin, weight: .medium)
                 let txtRect = CGRect(x: 0, y: 0, width: stringConfig.spacing, height: fretConfig.spacing)
                 let transX = startingX + ((endingX - startingX) / 2)
                 let transY = y
