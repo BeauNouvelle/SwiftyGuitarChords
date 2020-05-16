@@ -204,6 +204,7 @@ public struct ChordPosition: Codable {
                 circleLayer.path = circle.cgPath
                 circleLayer.lineWidth = fretConfig.spacing / 24
                 circleLayer.strokeColor = UIColor.black.cgColor
+                circleLayer.fillColor = UIColor.white.cgColor
                 layer.addSublayer(circleLayer)
 
                 continue
