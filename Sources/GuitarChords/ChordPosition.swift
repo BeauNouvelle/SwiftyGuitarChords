@@ -22,7 +22,7 @@ public struct ChordPosition: Codable {
     private let numberOfStrings = 6 - 1
     private let numberOfFrets = 5
 
-    public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool) -> CAShapeLayer {
+    public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool) -> CAShapeLayer {
         let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
         let horScale = rect.height / heightMultiplier
         let scale = min(horScale, rect.width)
@@ -43,16 +43,16 @@ public struct ChordPosition: Codable {
         let stringConfig = LineConfig(spacing: stringSpacing, margin: stringMargin, length: stringLength, count: numberOfStrings)
 
         let layer = CAShapeLayer()
-        let stringsAndFrets = stringsAndFretsLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin)
-        let barre = barreLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers)
-        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers)
+        let stringsAndFrets = stringsAndFretsLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, forScreen: forScreen)
+        let barre = barreLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers, forScreen: forScreen)
+        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers, forScreen: forScreen)
 
         layer.addSublayer(stringsAndFrets)
         layer.addSublayer(barre)
         layer.addSublayer(dots)
 
         if showChordName {
-            let shapeLayer = nameLayer(fretConfig: fretConfig, origin: origin, center: size.width / 2 + origin.x)
+            let shapeLayer = nameLayer(fretConfig: fretConfig, origin: origin, center: size.width / 2 + origin.x, forScreen: forScreen)
             layer.addSublayer(shapeLayer)
         }
 
@@ -61,7 +61,7 @@ public struct ChordPosition: Codable {
         return layer
     }
 
-    private func stringsAndFretsLayer(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint) -> CAShapeLayer {
+    private func stringsAndFretsLayer(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint, forScreen: Bool) -> CAShapeLayer {
         let layer = CAShapeLayer()
 
         // Strings
@@ -76,7 +76,7 @@ public struct ChordPosition: Codable {
         let stringLayer = CAShapeLayer()
         stringLayer.path = stringPath.cgPath
         stringLayer.lineWidth = stringConfig.spacing / 24
-        stringLayer.strokeColor = UIColor.black.cgColor
+        stringLayer.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
         layer.addSublayer(stringLayer)
 
         // Frets
@@ -101,7 +101,7 @@ public struct ChordPosition: Codable {
                 let transY = origin.y + (fretConfig.spacing / 2) + fretConfig.margin
                 let txtPath = "\(baseFret)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
                 txtLayer.path = txtPath.cgPath
-                txtLayer.fillColor = UIColor.black.cgColor
+                txtLayer.fillColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
                 fretLayer.addSublayer(txtLayer)
             }
 
@@ -114,7 +114,7 @@ public struct ChordPosition: Codable {
             fret.path = fretPath.cgPath
             fret.lineWidth = lineWidth
             fret.lineCap = .square
-            fret.strokeColor = UIColor.black.cgColor
+            fret.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
             fretLayer.addSublayer(fret)
         }
 
@@ -123,18 +123,18 @@ public struct ChordPosition: Codable {
         return layer
     }
 
-    private func nameLayer(fretConfig: LineConfig, origin: CGPoint, center: CGFloat) -> CAShapeLayer {
+    private func nameLayer(fretConfig: LineConfig, origin: CGPoint, center: CGFloat, forScreen: Bool) -> CAShapeLayer {
         let txtFont = UIFont.systemFont(ofSize: fretConfig.margin, weight: .medium)
         let txtRect = CGRect(x: 0, y: 0, width: fretConfig.length, height: fretConfig.margin + origin.y)
         let transY = (origin.y + fretConfig.margin) * 0.35
         let txtPath = (key.rawValue + " " + suffix.rawValue).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
         let shape = CAShapeLayer()
         shape.path = txtPath.cgPath
-        shape.fillColor = UIColor.black.cgColor
+        shape.fillColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
         return shape
     }
 
-    private func barreLayer(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> CAShapeLayer {
+    private func barreLayer(fretConfig: LineConfig, stringConfig: LineConfig, origin: CGPoint, showFingers: Bool, forScreen: Bool) -> CAShapeLayer {
         let layer = CAShapeLayer()
 
         for barre in barres {
@@ -161,7 +161,7 @@ public struct ChordPosition: Codable {
             barreLayer.path = barrePath.cgPath
             barreLayer.lineCap = .round
             barreLayer.lineWidth = fretConfig.spacing * 0.65
-            barreLayer.strokeColor = UIColor.black.cgColor
+            barreLayer.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
 
             layer.addSublayer(barreLayer)
 
@@ -175,7 +175,7 @@ public struct ChordPosition: Codable {
                 // TODO: Barre number is incorrect, it needs to be the number of the finger...
                 let txtPath = "\(barre)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
                 fingerLayer.path = txtPath.cgPath
-                fingerLayer.fillColor = UIColor.white.cgColor
+                fingerLayer.fillColor = forScreen ? UIColor.systemBackground.cgColor : UIColor.white.cgColor
                 layer.addSublayer(fingerLayer)
             }
         }
@@ -183,7 +183,7 @@ public struct ChordPosition: Codable {
         return layer
     }
 
-    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool) -> CAShapeLayer {
+    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool, forScreen: Bool) -> CAShapeLayer {
         let layer = CAShapeLayer()
 
         for index in 0..<frets.count {
@@ -203,8 +203,8 @@ public struct ChordPosition: Codable {
                 let circleLayer = CAShapeLayer()
                 circleLayer.path = circle.cgPath
                 circleLayer.lineWidth = fretConfig.spacing / 24
-                circleLayer.strokeColor = UIColor.black.cgColor
-                circleLayer.fillColor = UIColor.white.cgColor
+                circleLayer.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
+                circleLayer.fillColor = forScreen ? UIColor.systemBackground.cgColor : UIColor.white.cgColor
                 layer.addSublayer(circleLayer)
 
                 continue
@@ -230,7 +230,7 @@ public struct ChordPosition: Codable {
                 let crossLayer = CAShapeLayer()
                 crossLayer.path = cross.cgPath
                 crossLayer.lineWidth = fretConfig.spacing / 24
-                crossLayer.strokeColor = UIColor.black.cgColor
+                crossLayer.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
 
                 layer.addSublayer(crossLayer)
 
@@ -249,7 +249,7 @@ public struct ChordPosition: Codable {
 
             let dotLayer = CAShapeLayer()
             dotLayer.path = dotPath.cgPath
-            dotLayer.fillColor = UIColor.black.cgColor
+            dotLayer.fillColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
             layer.addSublayer(dotLayer)
 
             if showFingers {
@@ -258,7 +258,7 @@ public struct ChordPosition: Codable {
                 let txtPath = "\(fingers[index])".path(font: txtFont, rect: txtRect, position: CGPoint(x: dotX, y: dotY))
                 let txtLayer = CAShapeLayer()
                 txtLayer.path = txtPath.cgPath
-                txtLayer.fillColor = UIColor.white.cgColor
+                txtLayer.fillColor = forScreen ? UIColor.systemBackground.cgColor : UIColor.white.cgColor
                 layer.addSublayer(txtLayer)
             }
 
