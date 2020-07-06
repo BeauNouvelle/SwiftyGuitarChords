@@ -14,13 +14,13 @@ public struct ChordPosition: Codable {
     public let fingers: [Int]
     public let baseFret: Int
     public let barres: [Int]
-    public var capo: Bool = false
+    public var capo: Bool?
     public let midi: [Int]
     public let key: GuitarChords.Key
     public let suffix: GuitarChords.Suffix
     
-    private(set) var numberOfStrings = 6 - 1
-    private(set) var numberOfFrets = 5
+    static private let numberOfStrings = 6 - 1
+    static private let numberOfFrets = 5
 
     public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool) -> CAShapeLayer {
         let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
@@ -36,11 +36,11 @@ public struct ChordPosition: Codable {
         let stringLength = size.height - (fretMargin * (showChordName ? 2.8 : 2))
         let origin = CGPoint(x: rect.origin.x, y: showChordName ? fretMargin * 1.2 : 0)
 
-        let fretSpacing = stringLength / CGFloat(numberOfFrets)
-        let stringSpacing = fretLength / CGFloat(numberOfStrings)
+        let fretSpacing = stringLength / CGFloat(ChordPosition.numberOfFrets)
+        let stringSpacing = fretLength / CGFloat(ChordPosition.numberOfStrings)
 
-        let fretConfig = LineConfig(spacing: fretSpacing, margin: fretMargin, length: fretLength, count: numberOfFrets)
-        let stringConfig = LineConfig(spacing: stringSpacing, margin: stringMargin, length: stringLength, count: numberOfStrings)
+        let fretConfig = LineConfig(spacing: fretSpacing, margin: fretMargin, length: fretLength, count: ChordPosition.numberOfFrets)
+        let stringConfig = LineConfig(spacing: stringSpacing, margin: stringMargin, length: stringLength, count: ChordPosition.numberOfStrings)
 
         let layer = CAShapeLayer()
         let stringsAndFrets = stringsAndFretsLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, forScreen: forScreen)
