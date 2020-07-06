@@ -14,13 +14,13 @@ public struct ChordPosition: Codable {
     public let fingers: [Int]
     public let baseFret: Int
     public let barres: [Int]
-    public let capo: Bool = false
+    public var capo: Bool = false
     public let midi: [Int]
     public let key: GuitarChords.Key
     public let suffix: GuitarChords.Suffix
     
-    private let numberOfStrings = 6 - 1
-    private let numberOfFrets = 5
+    private(set) var numberOfStrings = 6 - 1
+    private(set) var numberOfFrets = 5
 
     public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool) -> CAShapeLayer {
         let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
