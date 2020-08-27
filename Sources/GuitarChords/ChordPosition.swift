@@ -95,7 +95,7 @@ public struct ChordPosition: Codable {
             // Draw fret number
             if baseFret != 1 {
                 let txtLayer = CAShapeLayer()
-                let txtFont = UIFont.systemFont(ofSize: fretConfig.margin * 0.7)
+                let txtFont = UIFont.systemFont(ofSize: fretConfig.margin * 0.5)
                 let txtRect = CGRect(x: 0, y: 0, width: stringConfig.margin, height: fretConfig.spacing)
                 let transX = stringConfig.margin / 5 + origin.x
                 let transY = origin.y + (fretConfig.spacing / 2) + fretConfig.margin
@@ -142,14 +142,19 @@ public struct ChordPosition: Codable {
 
             // draw barre behind all frets that are above the barre chord
             var length = 0
-            for dot in frets {
+            var startOffset = 0
+            for index in 0..<frets.count {
+                let dot = frets[index]
                 if dot >= barre {
                     length += 1
+                } else if dot < barre {
+                    length = 0
+                    startOffset = index + 1
                 }
             }
 
             let offset = stringConfig.spacing / 7
-            let startingX = CGFloat(frets.firstIndex(of: barre) ?? 0) * stringConfig.spacing + stringConfig.margin + (origin.x + offset)
+            let startingX = CGFloat(startOffset) * stringConfig.spacing + stringConfig.margin + (origin.x + offset)
             let y = CGFloat(barre) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y
 
             barrePath.move(to: CGPoint(x: startingX, y: y))
@@ -172,9 +177,10 @@ public struct ChordPosition: Codable {
                 let transX = startingX + ((endingX - startingX) / 2)
                 let transY = y
 
-                // TODO: Barre number is incorrect, it needs to be the number of the finger...
-                let txtPath = "\(barre)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
-                fingerLayer.path = txtPath.cgPath
+                if let fretIndex = frets.firstIndex(of: barre) {
+                    let txtPath = "\(fingers[fretIndex])".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
+                    fingerLayer.path = txtPath.cgPath
+                }
                 fingerLayer.fillColor = forScreen ? UIColor.systemBackground.cgColor : UIColor.white.cgColor
                 layer.addSublayer(fingerLayer)
             }
@@ -238,7 +244,19 @@ public struct ChordPosition: Codable {
             }
 
             if barres.contains(fret) {
-                continue
+                if index + 1 < frets.count {
+                    let next = index + 1
+                    if frets[next] >= fret {
+                        continue
+                    }
+                }
+
+                if index - 1 > 0 {
+                    let prev = index - 1
+                    if frets[prev] >= fret {
+                        continue
+                    }
+                }
             }
 
             let dotY = CGFloat(fret) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y

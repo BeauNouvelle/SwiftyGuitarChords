@@ -474,16 +474,16 @@ struct ChordsData {
             "suffix": "9",
             "midi": [40, 48, 52, 55, 62, 64],
             "barres": [],
-            "fingers": [0, 2, 3, 0, 4, 0],
+            "fingers": [0, 2, 1, 3, 4, 0],
             "baseFret": 1,
             "key": "C",
-            "frets": [0, 3, 2, 0, 3, 0]
+            "frets": [-1, 3, 2, 3, 3, -1]
         }, {
             "midi": [43, 48, 52, 58, 62, 67],
             "key": "C",
             "suffix": "9",
-            "frets": [3, 3, 2, 3, 3, 3],
-            "fingers": [2, 2, 1, 3, 3, 4],
+            "frets": [-1, 3, 2, 3, 3, 3],
+            "fingers": [0, 2, 1, 3, 3, 3],
             "barres": [3],
             "baseFret": 1
         }, {
@@ -502,7 +502,7 @@ struct ChordsData {
             "capo": true,
             "midi": [48, 55, 58, 62, 67, 74],
             "baseFret": 7,
-            "frets": [2, 4, 2, 1, 2, 4],
+            "frets": [2, 4, 2, 3, 2, 4],
             "suffix": "9"
         }, {
             "barres": [],
@@ -862,10 +862,10 @@ struct ChordsData {
             "key": "C",
             "midi": [43, 48, 52, 59, 62],
             "baseFret": 1,
-            "barres": [3],
-            "fingers": [2, 2, 1, 4, 3, 0],
+            "barres": [],
+            "fingers": [0, 2, 1, 4, 3, 0],
             "suffix": "maj9",
-            "frets": [3, 3, 2, 4, 3, -1]
+            "frets": [-1, 3, 2, 4, 3, -1]
         }, {
             "suffix": "maj9",
             "barres": [1],
