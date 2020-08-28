@@ -1,4 +1,5 @@
-# GuitarChords
+# Swifty Guitar Chords
+![banner](banner.jpg)
 
 This is a Swift library that can generate CAShapeLayers for any chord within it's database. All you need to do is supply a Key (C, C#, etc) and a suffix (Major, Minor, sus4, etc) to find the appropriate chord. Each chord comes with a few variants. 
 
