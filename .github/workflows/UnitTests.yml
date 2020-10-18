@@ -3,7 +3,7 @@ name: UnitTests
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   test_on_macos:
