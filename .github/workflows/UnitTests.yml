@@ -14,11 +14,3 @@ name: UnitTests
        run: swift build
      - name: Test
        run: swift test
-   test_on_linux:
-     runs-on: ubuntu-latest
-     steps:
-     - uses: actions/checkout@v2
-     - name: Build
-       run: swift build
-     - name: Test
-       run: swift test
