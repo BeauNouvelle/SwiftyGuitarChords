@@ -1,0 +1,24 @@
+name: UnitTests
+
+ on:
+   push:
+     branches:
+       - master
+
+ jobs:
+   test_on_macos:
+     runs-on: macos-latest
+     steps:
+     - uses: actions/checkout@v2
+     - name: Build
+       run: swift build
+     - name: Test
+       run: swift test
+   test_on_linux:
+     runs-on: ubuntu-latest
+     steps:
+     - uses: actions/checkout@v2
+     - name: Build
+       run: swift build
+     - name: Test
+       run: swift test
