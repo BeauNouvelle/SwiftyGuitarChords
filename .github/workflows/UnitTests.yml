@@ -1,16 +1,16 @@
 name: UnitTests
 
- on:
-   push:
-     branches:
-       - master
+on:
+  push:
+    branches:
+      - master
 
- jobs:
-   test_on_macos:
-     runs-on: macos-latest
-     steps:
-     - uses: actions/checkout@v2
-     - name: Build
-       run: swift build
-     - name: Test
-       run: swift test
+jobs:
+  test_on_macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: swift build
+    - name: Test
+      run: swift test
