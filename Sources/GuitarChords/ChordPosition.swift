@@ -142,12 +142,14 @@ public struct ChordPosition: Codable {
 
             // draw barre behind all frets that are above the barre chord
             var length = 1
-            let startOffset = (frets.firstIndex { $0 < barre } ?? 0) + 1
+            var startOffset = (frets.firstIndex { $0 < barre } ?? 0)
 
-            for index in 0..<frets.count {
+            for index in startOffset..<frets.count {
                 let dot = frets[index]
                 if dot >= barre && index > startOffset {
                     length += 1
+                } else {
+                    startOffset += 1
                 }
             }
 
