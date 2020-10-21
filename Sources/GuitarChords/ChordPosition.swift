@@ -141,20 +141,15 @@ public struct ChordPosition: Codable {
             let barrePath = UIBezierPath()
 
             // draw barre behind all frets that are above the barre chord
+            let startIndex = (frets.first { $0 == barre } ?? 0) + 1
+            var length = 0
 
-            // Barre finger will be duplicate finger positions.
-            let barreFinger = Dictionary(grouping: fingers, by: {$0}).filter { $1.count > 1 }.keys.filter { $0 > 0 }.max() ?? 0
-            // Index of first barre finger position
-            let startIndex = fingers.firstIndex { $0 == barreFinger } ?? 0
-            // index of last barre finger position
-            let endIndex = fingers.lastIndex { $0 == barreFinger } ?? 5
-            var length = (endIndex - startIndex) + 1
-
-            // Pad out barre if all remaining frets are above barre finger.
-            for index in endIndex..<frets.count {
+            for index in startIndex..<frets.count {
                 let dot = frets[index]
-                if dot > barre {
+                if dot >= barre {
                     length += 1
+                } else {
+                    break
                 }
             }
 
