@@ -147,8 +147,9 @@ public struct ChordPosition: Codable {
                 let dot = frets[index]
                 if dot >= barre {
                     length += 1
-                } else if dot < barre {
-                    if length > 0 {
+                } else {
+                    if length > 1 {
+                        length -= 1
                         break
                     }
                     startOffset = index + 1
