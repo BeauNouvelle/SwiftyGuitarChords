@@ -149,8 +149,6 @@ public struct ChordPosition: Codable {
                     length += 1
                 } else if dot < barre && length == 0 {
                     startOffset = index + 1
-                } else {
-                    break
                 }
             }
 
