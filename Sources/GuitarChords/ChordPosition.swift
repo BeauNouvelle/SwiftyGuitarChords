@@ -141,20 +141,20 @@ public struct ChordPosition: Codable {
             let barrePath = UIBezierPath()
 
             // draw barre behind all frets that are above the barre chord
+            let startIndex = (frets.firstIndex { $0 == barre } ?? 0)
             var length = 0
-            var startOffset = 0
-            for index in 0..<frets.count {
+
+            for index in startIndex..<frets.count {
                 let dot = frets[index]
                 if dot >= barre {
                     length += 1
-                } else if dot < barre {
-                    length = 0
-                    startOffset = index + 1
+                } else {
+                    break
                 }
             }
 
             let offset = stringConfig.spacing / 7
-            let startingX = CGFloat(startOffset) * stringConfig.spacing + stringConfig.margin + (origin.x + offset)
+            let startingX = CGFloat(startIndex) * stringConfig.spacing + stringConfig.margin + (origin.x + offset)
             let y = CGFloat(barre) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y
 
             barrePath.move(to: CGPoint(x: startingX, y: y))
