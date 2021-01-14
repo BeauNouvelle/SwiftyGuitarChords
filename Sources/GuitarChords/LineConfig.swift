@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 struct LineConfig {
     /// spacing between lines

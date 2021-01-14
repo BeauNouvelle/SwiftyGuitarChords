@@ -7,12 +7,11 @@
 
 import Foundation
 import CoreText
-import UIKit
 
 extension NSAttributedString {
 
-    func computeLetterPaths(size: CGSize) -> (paths: [UIBezierPath], positions: [CGPoint]) {
-        var letterPaths: [UIBezierPath] = []
+    func computeLetterPaths(size: CGSize) -> (paths: [CGPath], positions: [CGPoint]) {
+        var letterPaths: [CGPath] = []
         var lineRects: [CGRect] = []
         var letterPositions: [CGPoint] = []
 
@@ -57,7 +56,7 @@ extension NSAttributedString {
                     position.y = lineOrigin.y
 
                     if let path = CTFontCreatePathForGlyph(font, glyph, nil) {
-                        letterPaths.append(UIBezierPath(cgPath: path))
+                        letterPaths.append(path)
                         letterPositions.append(position)
                     }
                 }
