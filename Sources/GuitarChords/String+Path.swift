@@ -16,7 +16,7 @@ import AppKit
 extension String {
 
     #if !os(macOS)
-    func path(font: UIFont, rect: CGRect, alignment: NSTextAlignment = .left, position: CGPoint) -> UIBezierPath {
+    func path(font: UIFont, rect: CGRect, alignment: NSTextAlignment = .left, position: CGPoint) -> CGPath {
         let titleParagraphStyle = NSMutableParagraphStyle()
         titleParagraphStyle.alignment = alignment
 
@@ -27,14 +27,13 @@ extension String {
 
         for (index, path) in glyphPaths.paths.enumerated() {
             let pos = glyphPaths.positions[index]
-            path.apply(CGAffineTransform(translationX: pos.x, y: pos.y))
-            titlePath.append(path)
+            titlePath.addPath(path, transform: CGAffineTransform(translationX: pos.x, y: pos.y))
         }
 
-        titlePath.apply(CGAffineTransform(scaleX: 1, y: -1))
-        titlePath.apply(CGAffineTransform(translationX: position.x - titlePath.bounds.midX, y: position.y - titlePath.bounds.midY))
+        var scale = CGAffineTransform(scaleX: 1, y: -1)
+        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBox.midX, y: position.y - titlePath.boundingBox.midY)
 
-        return titlePath
+        return titlePath.copy(using: &scale)?.copy(using: &move) ?? CGMutablePath()
     }
     #else
     func path(font: NSFont, rect: CGRect, alignment: NSTextAlignment = .left, position: CGPoint) -> CGPath {
@@ -57,7 +56,5 @@ extension String {
         return titlePath.copy(using: &scale)?.copy(using: &move) ?? CGMutablePath()
     }
     #endif
-
-
 
 }
