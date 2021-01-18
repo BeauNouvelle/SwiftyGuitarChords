@@ -31,7 +31,7 @@ extension String {
         }
 
         var scale = CGAffineTransform(scaleX: 1, y: -1)
-        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBoxOfPath.midX, y: position.y - titlePath.boundingBoxOfPath.midY)
+        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBoxOfPath.midX, y: position.y - titlePath.boundingBoxOfPath.midY - 7)
 
         return titlePath.copy(using: &scale)?.copy(using: &move) ?? CGMutablePath()
     }
@@ -51,7 +51,7 @@ extension String {
         }
 
         var scale = CGAffineTransform(scaleX: 1, y: -1)
-        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBoxOfPath.midX, y: position.y - titlePath.boundingBoxOfPath.midY)
+        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBoxOfPath.midX, y: position.y - titlePath.boundingBoxOfPath.midY - 7)
 
         return titlePath.copy(using: &scale)?.copy(using: &move) ?? CGMutablePath()
     }
