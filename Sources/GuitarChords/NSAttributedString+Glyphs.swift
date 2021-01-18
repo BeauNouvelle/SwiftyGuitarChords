@@ -31,7 +31,7 @@ extension NSAttributedString {
             lineRects.append(lineBounds)
 
             // adjust origin for flipped coordinate system
-            lineOrigin.y = (lineBounds.height/1.405) - (size.height - lineOrigin.y)
+            lineOrigin.y = (lineBounds.height/3) - (size.height - lineOrigin.y)
 
             let runs = CTLineGetGlyphRuns(line)
             for runIndex in 0..<CFArrayGetCount(runs) {
