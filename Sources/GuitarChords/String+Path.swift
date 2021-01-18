@@ -15,12 +15,12 @@ import AppKit
 
 extension String {
 
-    #if !os(macOS)
+    #if os(iOS)
     func path(font: UIFont, rect: CGRect, alignment: NSTextAlignment = .left, position: CGPoint) -> CGPath {
         let titleParagraphStyle = NSMutableParagraphStyle()
         titleParagraphStyle.alignment = alignment
 
-        let paragraph = NSMutableAttributedString(string: self, attributes: [.font: font, .paragraphStyle: titleParagraphStyle])
+        let paragraph = NSAttributedString(string: self, attributes: [.font: font, .paragraphStyle: titleParagraphStyle])
 
         let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
         let titlePath = CGMutablePath()
@@ -31,7 +31,7 @@ extension String {
         }
 
         var scale = CGAffineTransform(scaleX: 1, y: -1)
-        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBox.midX, y: position.y - titlePath.boundingBox.midY)
+        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBoxOfPath.midX, y: position.y - titlePath.boundingBoxOfPath.midY)
 
         return titlePath.copy(using: &scale)?.copy(using: &move) ?? CGMutablePath()
     }
@@ -40,7 +40,7 @@ extension String {
         let titleParagraphStyle = NSMutableParagraphStyle()
         titleParagraphStyle.alignment = alignment
 
-        let paragraph = NSMutableAttributedString(string: self, attributes: [.font: font, .paragraphStyle: titleParagraphStyle])
+        let paragraph = NSAttributedString(string: self, attributes: [.font: font, .paragraphStyle: titleParagraphStyle])
 
         let glyphPaths = paragraph.computeLetterPaths(size: rect.size)
         let titlePath = CGMutablePath()
@@ -51,7 +51,7 @@ extension String {
         }
 
         var scale = CGAffineTransform(scaleX: 1, y: -1)
-        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBox.midX, y: position.y - titlePath.boundingBox.midY)
+        var move = CGAffineTransform(translationX: position.x - titlePath.boundingBoxOfPath.midX, y: position.y - titlePath.boundingBoxOfPath.midY)
 
         return titlePath.copy(using: &scale)?.copy(using: &move) ?? CGMutablePath()
     }
