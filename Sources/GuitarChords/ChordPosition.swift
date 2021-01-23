@@ -14,7 +14,9 @@ import UIKit
 import AppKit
 #endif
 
-public struct ChordPosition: Codable {
+public struct ChordPosition: Codable, Identifiable {
+    public var id: UUID = UUID()
+
     public let frets: [Int]
     public let fingers: [Int]
     public let baseFret: Int
