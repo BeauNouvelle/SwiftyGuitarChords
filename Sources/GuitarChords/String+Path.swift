@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if !os(macOS)
+#if os(iOS)
 import UIKit
 #else
 import AppKit
