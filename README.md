@@ -11,6 +11,7 @@ I am using this library in my music study app "Mustud" with no problems at all.
 
 ## Requirements
 - iOS 13+
+- macOS 10.12+
 - Xcode 11+
 
 ## Installation
@@ -49,36 +50,15 @@ GuitarChords.all.matching(key: .c).matching(suffix: .major)
 ```
 
 ## Drawing
-There are a number of ways to use the CAShapeLayer. You can add it directly to a view, or convert it to a UIImage.
-
-Image from layer extension is as follows, and is not present in the library:
-
-```
-extension CALayer {
-
-    func imageFromLayer() -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, self.isOpaque, 0)
-
-        defer { UIGraphicsEndImageContext() }
-
-        guard let context = UIGraphicsGetCurrentContext() else {
-          return nil
-        }
-
-        self.render(in: context)
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-
-}
-```
+There are a number of ways to use the CAShapeLayer. You can add it directly to a view, or convert it to an Image.
 
 To use it, we just need a chord!
 
 ```
 let chordPosition = GuitarChords.all.matching(key: .c).matching(suffix: .major).first!
-let frame = CGRect(x: 0, y: 0, width: 100, height: 150)
+let frame = CGRect(x: 0, y: 0, width: 100, height: 150) // I find these sizes to be good.
 let layer = chordPosition.layer(rect: frame, showFingers: true, showChordName: true, forScreen: true)
-imageView.image = layer?.imageFromLayer()
+imageView.image = layer?.image() // might be exepensive. Use CALayer when possible.
 ```
 
 ### Arguments
