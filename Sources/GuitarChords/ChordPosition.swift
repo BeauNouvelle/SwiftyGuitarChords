@@ -29,6 +29,10 @@ public struct ChordPosition: Codable, Identifiable {
     static private let numberOfStrings = 6 - 1
     static private let numberOfFrets = 5
 
+    private enum CodingKeys: String, CodingKey {
+        case frets, fingers, baseFret, barres, capo, midi, key, suffix
+    }
+
     public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool) -> CAShapeLayer {
         let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
         let horScale = rect.height / heightMultiplier
