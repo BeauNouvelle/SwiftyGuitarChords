@@ -9,14 +9,14 @@ import Foundation
 
 #if os(iOS)
 import UIKit
-extension CALayer {
+public extension CALayer {
     func image() -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(self.frame.size, self.isOpaque, 0)
 
         defer { UIGraphicsEndImageContext() }
 
         guard let context = UIGraphicsGetCurrentContext() else {
-          return nil
+            return nil
         }
 
         self.render(in: context)
@@ -25,19 +25,23 @@ extension CALayer {
 }
 #else
 import AppKit
-extension CALayer {
-    func image() -> NSImage {
-         let width = Int(bounds.width * self.contentsScale)
-         let height = Int(bounds.height * self.contentsScale)
+public extension CALayer {
+    func image() -> NSImage? {
+        let width = Int(bounds.width * self.contentsScale)
+        let height = Int(bounds.height * self.contentsScale)
         let imageRepresentation = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height, bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: NSColorSpaceName.deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
-         imageRepresentation.size = bounds.size
+        imageRepresentation.size = bounds.size
 
-         let context = NSGraphicsContext(bitmapImageRep: imageRepresentation)!
+        let context = NSGraphicsContext(bitmapImageRep: imageRepresentation)!
 
-         render(in: context.cgContext)
+        render(in: context.cgContext)
 
-         return NSImage(cgImage: imageRepresentation.cgImage!, size: bounds.size)
-     }
+        guard let image = imageRepresentation.cgImage else {
+            return nil
+        }
+
+        return NSImage(cgImage: image, size: bounds.size)
+    }
 }
 #endif
 
