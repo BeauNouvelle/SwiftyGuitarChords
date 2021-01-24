@@ -11,7 +11,7 @@ I am using this library in my music study app "Mustud" with no problems at all.
 
 ## Requirements
 - iOS 13+
-- macOS 10.12+
+- macOS 10.12+ -> It works, but you'll need to flip the results since it uses iOS drawing coordinates.
 - Xcode 11+
 
 ## Installation
