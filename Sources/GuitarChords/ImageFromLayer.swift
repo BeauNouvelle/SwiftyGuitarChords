@@ -27,6 +27,8 @@ public extension CALayer {
 import AppKit
 public extension CALayer {
     func image() -> NSImage? {
+        self.sublayerTransform = CATransform3DMakeScale(1.0, -1.0, 1.0)
+
         let width = Int(bounds.width * self.contentsScale)
         let height = Int(bounds.height * self.contentsScale)
         let imageRepresentation = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: width, pixelsHigh: height, bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: NSColorSpaceName.deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
