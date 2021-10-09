@@ -1,6 +1,6 @@
 import Foundation
 
-struct ChordsData {
+struct GuitarChordsData {
     static let data: Data? = """
         [{
             "key": "C",

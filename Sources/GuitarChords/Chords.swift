@@ -84,7 +84,7 @@ public struct Chords {
     }
 
     public static var guitar: [ChordPosition] {
-        guard let data = ChordsData.data else {
+        guard let data = GuitarChordsData.data else {
             print("there is no chord data")
             return []
         }
