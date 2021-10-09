@@ -24,21 +24,21 @@ Only supports Swift Package Manager at this time.
 #### Get all Chords
 
 ```
-GuitarChords.all
+Chords.guitar
 ```
 
 #### Filter by Key
 Returns all chords based on C
 
 ```
-GuitarChords.all.matching(key: .c)
+Chords.guitar.matching(key: .c)
 ```
 
 #### Filter by Suffix
 Returns all major chords in the database.
 
 ```
-GuitarChords.all.matching(suffix: .major)
+Chords.guitar.matching(suffix: .major)
 ```
 
 #### Filter by Key and Suffix
@@ -46,7 +46,7 @@ Returns all CMajor chords.
 These will be in order of position on the fretboard, starting at the nut.
 
 ```
-GuitarChords.all.matching(key: .c).matching(suffix: .major)
+Chords.guitar.matching(key: .c).matching(suffix: .major)
 ```
 
 ## Drawing
@@ -55,7 +55,7 @@ There are a number of ways to use the CAShapeLayer. You can add it directly to a
 To use it, we just need a chord!
 
 ```
-let chordPosition = GuitarChords.all.matching(key: .c).matching(suffix: .major).first!
+let chordPosition = Chords.guitar.matching(key: .c).matching(suffix: .major).first!
 let frame = CGRect(x: 0, y: 0, width: 100, height: 150) // I find these sizes to be good.
 let layer = chordPosition.layer(rect: frame, showFingers: true, showChordName: true, forScreen: true)
 imageView.image = layer?.image() // might be exepensive. Use CALayer when possible.
