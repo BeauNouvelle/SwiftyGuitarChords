@@ -18,6 +18,10 @@ I am using this library in my music study app "Mustud" with no problems at all.
 Only supports Swift Package Manager at this time.
 
 # Usage
+## Setup
+```
+import SwiftyChords
+```
 
 ## Search
 
