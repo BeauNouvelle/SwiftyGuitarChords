@@ -88,12 +88,12 @@ public struct Chords {
 
     private static func readData(for name: String) -> [ChordPosition] {
         do {
-            if let fileUrl = Bundle.main.url(forResource: name, withExtension: "json") {
-                print(fileUrl)
-                let data = try Data(contentsOf: fileUrl)
-                let allChords = try JSONDecoder().decode([ChordPosition].self, from: data)
-                return allChords
-            }
+//            if let fileUrl = Bundle.main.resourceURL?.appendPathComponent(<#T##pathComponent: String##String#>) (forResource: name, withExtension: "json") {
+//                print(fileUrl)
+//                let data = try Data(contentsOf: fileUrl)
+//                let allChords = try JSONDecoder().decode([ChordPosition].self, from: data)
+//                return allChords
+//            }
         } catch {
             #if DEBUG
             print("There is no chord data:", error)
