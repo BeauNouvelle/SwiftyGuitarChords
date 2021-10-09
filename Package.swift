@@ -16,8 +16,8 @@ let package = Package(
     targets: [
         .target(
             name: "SwiftyChords",
-            dependencies: []
-//            resources: [.process("Resources")]
+            dependencies: [],
+            resources: [.process("Resources")]
         ),
     ]
 )
