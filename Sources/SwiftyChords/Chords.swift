@@ -83,24 +83,23 @@ public struct Chords {
         case minorSlashGSharp = "m/G#"
     }
 
-    struct Guitar {
-        public static var all: [ChordPosition] {
-            guard let data = GuitarChordsData.data else {
-                print("there is no chord data")
-                return []
-            }
-            do {
+    public static var guitar = Chords.readData(for: "GuitarChords")
+    public static var ukulele = Chords.readData(for: "UkuleleChords")
+
+    private static func readData(for name: String) -> [ChordPosition] {
+        do {
+            if let fileUrl = Bundle.module.url(forResource: name, withExtension: "json") {
+                print(fileUrl)
+                let data = try Data(contentsOf: fileUrl)
                 let allChords = try JSONDecoder().decode([ChordPosition].self, from: data)
                 return allChords
-            } catch {
-                print(error)
-
-                #if DEBUG
-                print(error)
-                #endif
             }
-            return []
+        } catch {
+            #if DEBUG
+            print("There is no chord data:", error)
+            #endif
         }
+        return []
     }
     
 }
