@@ -88,9 +88,7 @@ public struct Chords {
 
     private static func readData(for name: String) -> [ChordPosition] {
         do {
-            print(Bundle.module.resourceURL)
-            var resourceUrl = Bundle(for: BundleFinder.self).resourceURL
-            resourceUrl?.appendPathComponent("SwiftyChords_SwiftyChords.bundle")
+            var resourceUrl = Bundle.module.resourceURL
             resourceUrl?.appendPathComponent(name)
             resourceUrl?.appendPathExtension("json")
             if let fileUrl = resourceUrl {
