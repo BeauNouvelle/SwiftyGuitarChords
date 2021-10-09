@@ -88,7 +88,7 @@ public struct Chords {
 
     private static func readData(for name: String) -> [ChordPosition] {
         do {
-            var resourceUrl = Bundle.main.resourceURL
+            var resourceUrl = Bundle(for: BundleFinder.self).resourceURL
             resourceUrl?.appendPathComponent(name)
             resourceUrl?.appendPathExtension("json")
             if let fileUrl = resourceUrl {
@@ -105,3 +105,5 @@ public struct Chords {
     }
     
 }
+
+private class BundleFinder {}
