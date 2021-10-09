@@ -91,6 +91,7 @@ public struct Chords {
             var resourceUrl = Bundle(for: BundleFinder.self).resourceURL
             resourceUrl?.appendPathComponent(name)
             resourceUrl?.appendPathExtension("json")
+            print(resourceUrl)
             if let fileUrl = resourceUrl {
                 let data = try Data(contentsOf: fileUrl)
                 let allChords = try JSONDecoder().decode([ChordPosition].self, from: data)
