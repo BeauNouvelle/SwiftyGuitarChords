@@ -23,8 +23,8 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
     public let barres: [Int]
     public var capo: Bool?
     public let midi: [Int]
-    public let key: GuitarChords.Key
-    public let suffix: GuitarChords.Suffix
+    public let key: Chords.Key
+    public let suffix: Chords.Suffix
     
     static private let numberOfStrings = 6 - 1
     static private let numberOfFrets = 5
