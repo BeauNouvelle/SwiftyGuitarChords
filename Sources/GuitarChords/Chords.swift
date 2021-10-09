@@ -1,7 +1,7 @@
 import Foundation
 import CoreGraphics
 
-public struct GuitarChords {
+public struct Chords {
 
     public enum Key: String, CaseIterable, Codable {
         case c = "C"
@@ -83,7 +83,7 @@ public struct GuitarChords {
         case minorSlashGSharp = "m/G#"
     }
 
-    public static var all: [ChordPosition] {
+    public static var guitar: [ChordPosition] {
         guard let data = ChordsData.data else {
             print("there is no chord data")
             return []
