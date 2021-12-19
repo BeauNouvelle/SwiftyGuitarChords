@@ -19,7 +19,7 @@ public struct Chords {
     }
 
     public enum Suffix: String, CaseIterable, Codable {
-        case major = "major"
+        case major = "Major"
         case minor = "minor"
         case dim = "dim"
         case dimSeven = "dim7"
@@ -41,22 +41,22 @@ public struct Chords {
         case eleven = "11"
         case nineSharpEleven = "9#11"
         case thirteen = "13"
-        case majorSeven = "maj7"
-        case majorSevenFlatFive = "maj7b5"
-        case majorSevenSharpFive = "maj7#5"
-        case majorNine = "maj9"
-        case majorEleven = "maj11"
-        case majorThirteen = "maj13"
+        case majorSeven = "Maj7"
+        case majorSevenFlatFive = "Maj7b5"
+        case majorSevenSharpFive = "Maj7#5"
+        case majorNine = "Maj9"
+        case majorEleven = "Maj11"
+        case majorThirteen = "Maj13"
         case minorSix = "m6"
         case minorSixNine = "m6/9"
         case minorSeven = "m7"
         case minorSevenFlatFive = "m7b5"
         case minorNine = "m9"
         case minorEleven = "m11"
-        case minorMajorSeven = "mmaj7"
-        case minorMajorSeventFlatFive = "mmaj7b5"
-        case minorMajorNine = "mmaj9"
-        case minorMajorEleven = "mmaj11"
+        case minorMajorSeven = "mMaj7"
+        case minorMajorSeventFlatFive = "mMaj7b5"
+        case minorMajorNine = "mMaj9"
+        case minorMajorEleven = "mMaj11"
         case addNine = "add9"
         case minorAddNine = "madd9"
         case slashE = "/E"
@@ -87,8 +87,13 @@ public struct Chords {
     public static var ukulele = Chords.readData(for: "UkuleleChords")
 
     private static func readData(for name: String) -> [ChordPosition] {
+        
+//        writeToJson()
+        readAndAddToChordDir()
+        
         do {
-            var resourceUrl = Bundle.module.resourceURL
+           
+            var resourceUrl = Bundle.main.resourceURL
             resourceUrl?.appendPathComponent(name)
             resourceUrl?.appendPathExtension("json")
             if let fileUrl = resourceUrl {
@@ -103,6 +108,81 @@ public struct Chords {
         }
         return []
     }
+    
+    
+    private static func writeToJson()
+    {
+        
+        
+        
+        let newChord = ChordPosition(frets: [1,-1,2,2,1,0], fingers: [1,0,3,4,2,1], baseFret: 1, barres: [1], midi: [0], key: Key.f , suffix: Suffix.major)
+
+        if let documentDirectory = FileManager.default.urls(for: .documentDirectory,
+                                                            in: .userDomainMask).first {
+            let pathWithFilename = documentDirectory.appendingPathComponent("GuitarChordsTest.json")
+            do {
+              
+                let data2 = try JSONEncoder().encode([newChord])
+                try data2.write(to: pathWithFilename, options: [])
+
+
+            } catch {
+                // Handle error
+            }
+        }
+        
+        
+        
+        
+    }
+    
+    
+    private static func readAndAddToChordDir()
+    {
+        
+        var allCustomChords = [ChordPosition]()
+        let documentDirectory = FileManager.default.urls(for: .documentDirectory,
+                                                            in: .userDomainMask).first!
+        let pathWithFilename = documentDirectory.appendingPathComponent("GuitarChordsTest.json")
+        
+        let fileUrl = pathWithFilename
+            do {
+            let data = try Data(contentsOf: fileUrl)
+            let allChords = try JSONDecoder().decode([ChordPosition].self, from: data)
+                allCustomChords = allChords
+                print("allCustomChords --- \(allCustomChords)")
+        }
+     catch {
+        #if DEBUG
+        print("There is no chord data:", error)
+        #endif
+    }
+    
+    
+        
+        let newChord = ChordPosition(frets: [1,-1,2,2,1,0], fingers: [1,0,3,4,2,1], baseFret: 1, barres: [1], midi: [0], key: Key.f , suffix: Suffix.major)
+        allCustomChords.append(newChord)
+
+        if let documentDirectory = FileManager.default.urls(for: .documentDirectory,
+                                                            in: .userDomainMask).first {
+            let pathWithFilename = documentDirectory.appendingPathComponent("GuitarChordsTest.json")
+            do {
+              
+                let data2 = try JSONEncoder().encode(allCustomChords)
+                try data2.write(to: pathWithFilename, options: [])
+
+
+            } catch {
+                // Handle error
+            }
+        }
+        
+        
+        
+        
+    }
+    
+    
     
 }
 
