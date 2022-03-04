@@ -61,15 +61,17 @@ To use it, we just need a chord!
 ```
 let chordPosition = Chords.guitar.matching(key: .c).matching(suffix: .major).first!
 let frame = CGRect(x: 0, y: 0, width: 100, height: 150) // I find these sizes to be good.
-let layer = chordPosition.layer(rect: frame, showFingers: true, showChordName: true, forScreen: true)
-imageView.image = layer?.image() // might be exepensive. Use CALayer when possible.
+let layer = chordPosition.shapeLayer(rect: frame)
+imageView.image = layer.image() // might be exepensive. Use Layers when possible while drawing to a view. Images are better if you plan to reuse or store them somewhere.
 ```
 
 ### Arguments
-`frame` is the size of the shape layer. The size of your chord.
+`rect`: The area for which the chord will be drawn to. This determines it's size. Chords have a set aspect ratio, and so the size of the chord will be based on the shortest side of the rect.
 
-`showFingers` set this to true if you want the finger positions to be drawn on each note.
+`showFingers`: Determines if the finger numbers should be drawn on top of the dots. Default `true`.
 
-`showChordName` set this to true if you want the chord name displayed. You may want to hide this if you were building a flashcard or chord quiz app.
+`showChordName` Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text. Default `true`.
 
-`forScreen` This is for dark mode support. Set it to false if you want it to always be drawn with a white background and black text (ideal for printing).
+`forPrint`: If set to `true` the diagram will be colored Black, not matter the users device settings. If set to false, the color of the diagram will match the system label color. Dark text for light mode, and Light text for dark mode. Default `false`.
+
+`mirror`: For lefthanded users. This will flip the chord along its y axis. Default `false`.
