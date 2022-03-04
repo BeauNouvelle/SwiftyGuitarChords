@@ -275,7 +275,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             // Draw circle above nut ⭕️
             if fret == 0 {
                 let size = fretConfig.spacing * 0.33
-                let circleX = ((CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x).shouldMirror(mirror, offset: rect.width - stringConfig.margin)
+                let circleX = ((CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x).shouldMirror(mirror, offset: rect.width - size)
                 let circleY = fretConfig.margin - size * 1.6 + origin.y
 
                 let center = CGPoint(x: circleX, y: circleY)
@@ -301,7 +301,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             // Draw cross above nut ❌
             if fret == -1 {
                 let size = fretConfig.spacing * 0.33
-                let crossX = ((CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x).shouldMirror(mirror, offset: rect.width - stringConfig.margin)
+                let crossX = ((CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x).shouldMirror(mirror, offset: rect.width - size)
                 let crossY = fretConfig.margin - size * 1.6 + origin.y
 
                 let center = CGPoint(x: crossX, y: crossY)
