@@ -33,7 +33,32 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         case frets, fingers, baseFret, barres, capo, midi, key, suffix
     }
 
+    /// This is THE place to pull out a CAShapeLayer that includes all parts of the chord chart. This is what to use when adding a layer to your UIView/NSView.
+    /// - Parameters:
+    ///   - rect: The area for which the chord will be drawn to. This determines it's size. Chords have a set aspect ratio, and so the size of the chord will be based on the shortest side of the rect.
+    ///   - showFingers: Determines if the finger numbers should be drawn on top of the dots. Default `true`.
+    ///   - showChordName: Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text. Default `true`.
+    ///   - forPrint: If set to `true` the diagram will be colored Black, not matter the users device settings. If set to false, the color of the diagram will match the system label color. Dark text for light mode, and Light text for dark mode. Default `false`.
+    ///   - mirror: For lefthanded users. This will flip the chord along its y axis. Default `false`.
+    /// - Returns: A CAShapeLayer that can be added as a sublayer to a view, or rendered to an image.
+    public func layer(rect: CGRect, showFingers: Bool = true, showChordName: Bool = true, forPrint: Bool = false, mirror: Bool = false) -> CAShapeLayer {
+        return privateLayer(rect: rect, showFingers: showFingers, showChordName: showChordName, forScreen: !forPrint, mirror: mirror)
+    }
+
+    /// Now deprecated. Please see other layer() function.
+    /// - Parameters:
+    ///   - rect: The area for which the chord will be drawn to. This determines it's size. Chords have a set aspect ratio, and so the size of the chord will be based on the shortest side of the rect.
+    ///   - showFingers: Determines if the finger numbers should be drawn on top of the dots.
+    ///   - showChordName: Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text.
+    ///   - forScreen: This takes care of Dark/Light mode. If it's on device ONLY, set this to true. When adding to a PDF, you'll want to set this to false.
+    ///   - mirror: For lefthanded users. This will flip the chord along its y axis.
+    /// - Returns: A CAShapeLayer that can be added to a view, or rendered to an image.
+    @available(*, deprecated, message: "For screen should have been defaulted to 'true'. Please use the better worded function instead.")
     public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool, mirror: Bool = false) -> CAShapeLayer {
+        return privateLayer(rect: rect, showFingers: showFingers, showChordName: showChordName, forScreen: forScreen, mirror: mirror)
+    }
+
+    private func privateLayer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool, mirror: Bool = false) -> CAShapeLayer {
         let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
         let horScale = rect.height / heightMultiplier
         let scale = min(horScale, rect.width)
