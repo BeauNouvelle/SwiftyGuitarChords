@@ -56,7 +56,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         let layer = CAShapeLayer()
         let stringsAndFrets = stringsAndFretsLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, forScreen: forScreen)
         let barre = barreLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers, forScreen: forScreen)
-        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers, forScreen: forScreen, mirror: mirror)
+        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers, forScreen: forScreen, rect: rect, mirror: mirror)
 
         layer.addSublayer(stringsAndFrets)
         layer.addSublayer(barre)
@@ -241,7 +241,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         return layer
     }
 
-    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool, forScreen: Bool, mirror: Bool) -> CAShapeLayer {
+    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool, forScreen: Bool, rect: CGRect, mirror: Bool) -> CAShapeLayer {
         let layer = CAShapeLayer()
 
         for index in 0..<frets.count {
@@ -322,7 +322,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             }
 
             let dotY = CGFloat(fret) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y
-            let dotX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin + origin.x) * (mirror ? -1 : 1)
+            let dotX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin + origin.x).shouldMirror(mirror, offset: rect.width)
 
             let dotPath = CGMutablePath()
             dotPath.addArc(center: CGPoint(x: dotX, y: dotY), radius: fretConfig.spacing * 0.35, startAngle: 0, endAngle: .pi * 2, clockwise: true)
@@ -358,4 +358,15 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         return layer
     }
 
+}
+
+
+extension CGFloat {
+    func shouldMirror(_ mirror: Bool, offset: CGFloat) -> CGFloat {
+        if mirror {
+            return self * -1 + offset
+        } else {
+            return self
+        }
+    }
 }
