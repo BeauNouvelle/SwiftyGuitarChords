@@ -33,7 +33,32 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         case frets, fingers, baseFret, barres, capo, midi, key, suffix
     }
 
-    public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool) -> CAShapeLayer {
+    /// This is THE place to pull out a CAShapeLayer that includes all parts of the chord chart. This is what to use when adding a layer to your UIView/NSView.
+    /// - Parameters:
+    ///   - rect: The area for which the chord will be drawn to. This determines it's size. Chords have a set aspect ratio, and so the size of the chord will be based on the shortest side of the rect.
+    ///   - showFingers: Determines if the finger numbers should be drawn on top of the dots. Default `true`.
+    ///   - showChordName: Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text. Default `true`.
+    ///   - forPrint: If set to `true` the diagram will be colored Black, not matter the users device settings. If set to false, the color of the diagram will match the system label color. Dark text for light mode, and Light text for dark mode. Default `false`.
+    ///   - mirror: For lefthanded users. This will flip the chord along its y axis. Default `false`.
+    /// - Returns: A CAShapeLayer that can be added as a sublayer to a view, or rendered to an image.
+    public func shapeLayer(rect: CGRect, showFingers: Bool = true, showChordName: Bool = true, forPrint: Bool = false, mirror: Bool = false) -> CAShapeLayer {
+        return privateLayer(rect: rect, showFingers: showFingers, showChordName: showChordName, forScreen: !forPrint, mirror: mirror)
+    }
+
+    /// Now deprecated. Please see the shapeLayer() function.
+    /// - Parameters:
+    ///   - rect: The area for which the chord will be drawn to. This determines it's size. Chords have a set aspect ratio, and so the size of the chord will be based on the shortest side of the rect.
+    ///   - showFingers: Determines if the finger numbers should be drawn on top of the dots.
+    ///   - showChordName: Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text.
+    ///   - forScreen: This takes care of Dark/Light mode. If it's on device ONLY, set this to true. When adding to a PDF, you'll want to set this to false.
+    ///   - mirror: For lefthanded users. This will flip the chord along its y axis.
+    /// - Returns: A CAShapeLayer that can be added to a view, or rendered to an image.
+    @available(*, deprecated, message: "For screen should have been defaulted to 'true'. Please use the better worded function instead.", renamed: "shapeLayer")
+    public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool, mirror: Bool = false) -> CAShapeLayer {
+        return privateLayer(rect: rect, showFingers: showFingers, showChordName: showChordName, forScreen: forScreen, mirror: mirror)
+    }
+
+    private func privateLayer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool, mirror: Bool = false) -> CAShapeLayer {
         let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
         let horScale = rect.height / heightMultiplier
         let scale = min(horScale, rect.width)
@@ -56,7 +81,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         let layer = CAShapeLayer()
         let stringsAndFrets = stringsAndFretsLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, forScreen: forScreen)
         let barre = barreLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers, forScreen: forScreen)
-        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers, forScreen: forScreen)
+        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers, forScreen: forScreen, rect: rect, mirror: mirror)
 
         layer.addSublayer(stringsAndFrets)
         layer.addSublayer(barre)
@@ -241,16 +266,16 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         return layer
     }
 
-    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool, forScreen: Bool) -> CAShapeLayer {
+    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool, forScreen: Bool, rect: CGRect, mirror: Bool) -> CAShapeLayer {
         let layer = CAShapeLayer()
 
         for index in 0..<frets.count {
             let fret = frets[index]
 
-            // Draw circle above nut
+            // Draw circle above nut ⭕️
             if fret == 0 {
                 let size = fretConfig.spacing * 0.33
-                let circleX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x
+                let circleX = ((CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x).shouldMirror(mirror, offset: rect.width - size)
                 let circleY = fretConfig.margin - size * 1.6 + origin.y
 
                 let center = CGPoint(x: circleX, y: circleY)
@@ -273,10 +298,10 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
                 continue
             }
 
-            // Draw cross above nut
+            // Draw cross above nut ❌
             if fret == -1 {
                 let size = fretConfig.spacing * 0.33
-                let crossX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x
+                let crossX = ((CGFloat(index) * stringConfig.spacing + stringConfig.margin) - size / 2 + origin.x).shouldMirror(mirror, offset: rect.width - size)
                 let crossY = fretConfig.margin - size * 1.6 + origin.y
 
                 let center = CGPoint(x: crossX, y: crossY)
@@ -322,7 +347,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             }
 
             let dotY = CGFloat(fret) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y
-            let dotX = CGFloat(index) * stringConfig.spacing + stringConfig.margin + origin.x
+            let dotX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin + origin.x).shouldMirror(mirror, offset: rect.width)
 
             let dotPath = CGMutablePath()
             dotPath.addArc(center: CGPoint(x: dotX, y: dotY), radius: fretConfig.spacing * 0.35, startAngle: 0, endAngle: .pi * 2, clockwise: true)
@@ -358,4 +383,15 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         return layer
     }
 
+}
+
+
+extension CGFloat {
+    func shouldMirror(_ mirror: Bool, offset: CGFloat) -> CGFloat {
+        if mirror {
+            return self * -1 + offset
+        } else {
+            return self
+        }
+    }
 }
