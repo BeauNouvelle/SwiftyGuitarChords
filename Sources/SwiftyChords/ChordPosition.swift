@@ -322,7 +322,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             }
 
             let dotY = CGFloat(fret) * fretConfig.spacing + fretConfig.margin - (fretConfig.spacing / 2) + origin.y
-            let dotX = CGFloat(index) * stringConfig.spacing + stringConfig.margin + origin.x
+            let dotX = (CGFloat(index) * stringConfig.spacing + stringConfig.margin + origin.x) * (mirror ? -1 : 1)
 
             let dotPath = CGMutablePath()
             dotPath.addArc(center: CGPoint(x: dotX, y: dotY), radius: fretConfig.spacing * 0.35, startAngle: 0, endAngle: .pi * 2, clockwise: true)
