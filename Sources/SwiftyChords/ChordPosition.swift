@@ -33,7 +33,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         case frets, fingers, baseFret, barres, capo, midi, key, suffix
     }
 
-    public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool) -> CAShapeLayer {
+    public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool, mirror: Bool = false) -> CAShapeLayer {
         let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
         let horScale = rect.height / heightMultiplier
         let scale = min(horScale, rect.width)
@@ -56,7 +56,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         let layer = CAShapeLayer()
         let stringsAndFrets = stringsAndFretsLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, forScreen: forScreen)
         let barre = barreLayer(fretConfig: fretConfig, stringConfig: stringConfig, origin: origin, showFingers: showFingers, forScreen: forScreen)
-        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers, forScreen: forScreen)
+        let dots = dotsLayer(stringConfig: stringConfig, fretConfig: fretConfig, origin: origin, showFingers: showFingers, forScreen: forScreen, mirror: mirror)
 
         layer.addSublayer(stringsAndFrets)
         layer.addSublayer(barre)
@@ -241,7 +241,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         return layer
     }
 
-    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool, forScreen: Bool) -> CAShapeLayer {
+    private func dotsLayer(stringConfig: LineConfig, fretConfig: LineConfig, origin: CGPoint, showFingers: Bool, forScreen: Bool, mirror: Bool) -> CAShapeLayer {
         let layer = CAShapeLayer()
 
         for index in 0..<frets.count {
