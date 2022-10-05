@@ -2,6 +2,10 @@ import Foundation
 import CoreGraphics
 
 public struct Chords {
+    
+    public enum Group {
+        case major, minor, diminished, augmented, suspended, other
+    }
 
     public enum Key: String, CaseIterable, Codable {
         case c = "C"
@@ -67,7 +71,7 @@ public struct Chords {
         case nineFlatFive = "9b5"
         case augNine = "aug9"
         case sevenFlatNine = "7b9"
-        case sevenSharpNince = "7#9"
+        case sevenSharpNine = "7#9"
         case eleven = "11"
         case nineSharpEleven = "9#11"
         case thirteen = "13"
@@ -164,7 +168,7 @@ public struct Chords {
                 return (" org nine", "aug9", "aug⁹", "⁺⁹")
             case .sevenFlatNine:
                 return (" seven flat nine", "7b9", "⁷♭⁹", "⁷♭⁹")
-            case .sevenSharpNince:
+            case .sevenSharpNine:
                 return (" seven sharp nine", "7#9", "⁷♯⁹", "⁷♯⁹")
             case .eleven:
                 return (" eleven", "11", "¹¹", "¹¹")
@@ -252,6 +256,28 @@ public struct Chords {
                 return (" minor slash G", "m/G", "m/G", "m/G")
             case .minorSlashGSharp:
                 return (" minor slash G sharp", "m/G#", "m/G♯", "m/G♯")
+            }
+        }
+        
+        /// Supports a few most popular groupings. Major, Minor, Diminished, Augmented, Suspended.
+        /// Please open a PR if you'd like to introduce more types or offer corrections.
+        /// Anything that doesn't fit into the above categories are put in `other`.
+        ///
+        /// The intention for the group is for developers to offer different filter types for chart lookup.
+        var group: Chords.Group {
+            switch self {
+            case .major, .majorSeven, .majorSevenFlatFive, .majorSevenSharpFive, .majorNine, .majorEleven, .majorThirteen, .addNine, .slashE, .slashF, .slashFSharp, .slashG, .slashGSharp, .slashA, .slashBFlat, .slashB, .slashC, .slashCSharp, .slashD, .slashDSharp:
+                return .major
+            case .minor, .minorSix, .minorSixNine, .minorSeven, .minorEleven, .minorSevenFlatFive, .minorMajorSeven, .minorMajorSeventFlatFive, .minorMajorNine, .minorMajorEleven, .minorAddNine, .minorSlashB, .minorSlashC, .minorSlashCSharp, .minorSlashD, .minorSlashDSharp, .minorSlashE, .minorSlashF, .minorSlashFSharp, .minorSlashG, .minorNine, .minorSlashGSharp:
+                return .minor
+            case .dim, .dimSeven:
+                return .diminished
+            case .susTwo, .susFour, .sevenSusFour:
+                return .suspended
+            case .aug, .augSeven, .augNine:
+                return .augmented
+            case .altered, .six, .sixNine, .seven, .sevenFlatFive, .nine, .nineFlatFive, .sevenFlatNine, .sevenSharpNine, .eleven, .nineSharpEleven, .thirteen:
+                return .other
             }
         }
     }
