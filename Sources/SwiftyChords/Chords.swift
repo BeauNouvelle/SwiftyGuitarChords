@@ -88,7 +88,8 @@ public struct Chords {
         /// - `symbol:` dim⁷, + For the most common uses of symbols in music notation.
         /// - `altSymbol:` °, ⁺ Alternative examples of the above `symbol` examples.
         ///
-        /// Advice is to look through this list and choose what is appropriate for your app. Please submit a PR if you'd like to add or change some of these items if you beleive it could be improved..
+        /// Advice is to look through this list and choose what is appropriate for your app. Please submit a PR if you'd like to add or change some of these items if you beleive it could be improved.
+        /// Because of this, do not rely on these values to always remain the same. So don't use them as identifiers, or keys.
         ///
         /// For accessibility strings the "th" is dropped from numbers. While not completely accurate, it rolls better.
         ///
