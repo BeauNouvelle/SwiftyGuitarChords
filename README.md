@@ -61,7 +61,7 @@ Chords.guitar.matching(group: .suspended)
 ```
 
 ## Display
-Swift Chords suports a number of alternative texts you can use in your UI including an accessibility text-to-speech friendly variant.
+Swifty Chords suports a number of alternative texts you can use in your UI including an accessibility text-to-speech friendly variant.
 Display texts from both Key and Suffix properties can be combined to complete the chord name.
 
 NOTE: These are new additions and currently don't work with the drawing portion of the library. All chord names are drawn using the `RawValue` on the Key and Suffix properties. There is an open issue for this.
@@ -75,7 +75,7 @@ print(cMajSevenFlatFive.suffix.display.altSymbol)  // "M⁷♭⁵"
 ```
 
 ## Drawing
-There are a number of ways to use the CAShapeLayer. You can add it directly to a view, or convert it to an Image.
+There are a number of ways to use the `CAShapeLayer`. You can add it directly to a view, or convert it to an Image.
 
 To use it, we just need a chord!
 
@@ -83,7 +83,7 @@ To use it, we just need a chord!
 let chordPosition = Chords.guitar.matching(key: .c).matching(suffix: .major).first!
 let frame = CGRect(x: 0, y: 0, width: 100, height: 150) // I find these sizes to be good.
 let layer = chordPosition.shapeLayer(rect: frame)
-imageView.image = layer.image() // might be exepensive. Use Layers when possible while drawing to a view. Images are better if you plan to reuse or store them somewhere.
+imageView.image = layer.image() // might be expensive. Use Layers when possible while drawing to a view. Images are better if you plan to send them outside the app.
 ```
 
 ### Arguments
@@ -93,6 +93,6 @@ imageView.image = layer.image() // might be exepensive. Use Layers when possible
 
 `showChordName` Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text. Default `true`.
 
-`forPrint`: If set to `true` the diagram will be colored Black, not matter the users device settings. If set to false, the color of the diagram will match the system label color. Dark text for light mode, and Light text for dark mode. Default `false`.
+`forPrint`: If set to `true` the diagram will be colored Black, ignoring the users device settings. If set to `false`, the color of the diagram will match the system label color. Dark text for light mode, and Light text for dark mode. Default `false`.
 
-`mirror`: For lefthanded users. This will flip the chord along its y axis. Default `false`.
+`mirror`: For left-handed users. This will flip the chord along its y axis. Default `false`.
