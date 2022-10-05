@@ -16,6 +16,36 @@ public struct Chords {
         case a = "A"
         case bFlat = "Bb"
         case b = "B"
+        
+        /// Contains text for accessibility text-to-speech and symbolized versions.
+        var display: (accessible: String, symbol: String) {
+            switch self {
+            case .c:
+                return ("C", "C")
+            case .cSharp:
+                return ("C sharp", "C♯")
+            case .d:
+                return ("D", "D")
+            case .eFlat:
+                return ("E flat", "E♭")
+            case .e:
+                return ("E", "E")
+            case .f:
+                return ("F", "F")
+            case .fSharp:
+                return ("F sharp", "F♯")
+            case .g:
+                return ("G", "G")
+            case .aFlat:
+                return ("A flat", "A♭")
+            case .a:
+                return ("A", "A")
+            case .bFlat:
+                return ("B flat", "B♭")
+            case .b:
+                return ("B", "B")
+            }
+        }
     }
 
     public enum Suffix: String, CaseIterable, Codable {
