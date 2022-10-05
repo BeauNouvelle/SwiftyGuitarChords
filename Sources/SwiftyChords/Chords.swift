@@ -95,7 +95,7 @@ public struct Chords {
         /// Symbols use superscript where appropriate (and possible). Be aware that not all fonts will support this. Use `short` instead if you're unsure.
         ///
         /// Some items may also be identical across types. Only in rare cases will an alt symbol be provided e.g. (`dim⁷`,`°`)
-        var display: (acessible: String, short: String, symbolized: String, altSymbol: String) {
+        var display: (accessible: String, short: String, symbolized: String, altSymbol: String) {
             switch self {
             case .major:
                 return (" major", "Maj", "M", "M")
@@ -134,93 +134,93 @@ public struct Chords {
             case .sevenFlatNine:
                 return (" seven flat nine", "7b9", "⁷♭⁹", "⁷♭⁹")
             case .sevenSharpNince:
-                return "7#9"
+                return (" seven sharp nine", "7#9", "⁷♯⁹", "⁷♯⁹")
             case .eleven:
-                return "11"
+                return (" eleven", "11", "¹¹", "¹¹")
             case .nineSharpEleven:
-                return "9#11"
+                return (" nine sharp eleven", "9#11", "⁹♯¹¹", "⁹♯¹¹")
             case .thirteen:
-                return "13"
+                return (" thirteen", "13", "¹³", "¹³")
             case .majorSeven:
-                return "Maj7"
+                return (" major seven", "Maj7", "Maj⁷", "M⁷")
             case .majorSevenFlatFive:
-                return "Maj7b5"
+                return (" major seven flat five", "Maj7b5", "Maj⁷♭⁵", "M⁷♭⁵")
             case .majorSevenSharpFive:
-                return "Maj7#5"
+                return (" major seven sharp five", "Maj7#5", "Maj⁷♯⁵", "M⁷♯⁵")
             case .majorNine:
-                return "Maj9"
+                return (" major nine", "Maj9", "Maj⁹", "M⁹")
             case .majorEleven:
-                return "Maj11"
+                return (" major eleven", "Maj11", "Maj¹¹", "M¹¹")
             case .majorThirteen:
-                return "Maj13"
+                return (" major thirteen", "Maj13", "Maj¹³", "M¹³")
             case .minorSix:
-                return "m6"
+                return (" minor six", "m6", "m⁶", "m⁶")
             case .minorSixNine:
-                return "m6/9"
+                return (" minor six slash nine", "m6/9", "m⁶ᐟ⁹", "m⁶ᐟ⁹")
             case .minorSeven:
-                return "m7"
+                return (" minor seven", "m7", "m⁷", "m⁷")
             case .minorSevenFlatFive:
-                return "m7b5"
+                return (" minor seven flat five", "m7b5", "m⁷♭⁵", "ø⁷")
             case .minorNine:
-                return "m9"
+                return (" minor nine", "m9", "m⁹", "m⁹")
             case .minorEleven:
-                return "m11"
+                return (" minor eleven", "m11", "m¹¹", "m¹¹")
             case .minorMajorSeven:
-                return "mMaj7"
+                return (" minor major seven", "mMaj7", "mMaj⁷", "mᴹ⁷")
             case .minorMajorSeventFlatFive:
-                return "mMaj7b5"
+                return (" minor major seven flat five", "mMaj7b5", "mMaj⁷♭⁵", "mᴹ⁷♭⁵")
             case .minorMajorNine:
-                return "mMaj9"
+                return (" minor major nine", "mMaj9", "mMaj⁹", "mᴹ⁹")
             case .minorMajorEleven:
-                return "mMaj11"
+                return (" minor major eleven", "mMaj11", "mMaj¹¹", "mᴹ¹¹")
             case .addNine:
-                return "add9"
+                return (" add nine", "add9", "add⁹", "ᵃᵈᵈ⁹")
             case .minorAddNine:
-                return "madd9"
+                return (" minor add nine", "madd9", "madd⁹", "mᵃᵈᵈ⁹")
             case .slashE:
-                return "/E"
+                return (" slash E", "/E", "/E", "/E")
             case .slashF:
-                return "/F"
+                return (" slash F", "/F", "/F", "/F")
             case .slashFSharp:
-                return "/F#"
+                return (" slash F sharp", "/F#", "/F♯", "/F♯")
             case .slashG:
-                return "/G"
+                return (" slash G", "/G", "/G", "/G")
             case .slashGSharp:
-                return "/G#"
+                return (" slash G sharp", "/G#", "/G♯", "/G♯")
             case .slashA:
-                return "/A"
+                return (" slash A", "/A", "/A", "/A")
             case .slashBFlat:
-                return "/Bb"
+                return (" slash B flat", "/Bb", "/B♭", "/B♭")
             case .slashB:
-                return "/B"
+                return (" slash B", "/B", "/B", "/B")
             case .slashC:
-                return "/C"
+                return (" slash C", "/C", "/C", "/C")
             case .slashCSharp:
-                return "/C#"
+                return (" slash C sharp", "/C#" , "/C♯", "/C♯")
             case .minorSlashB:
-                return "m/B"
+                return (" minor slash B", "m/B", "m/B", "m/B")
             case .minorSlashC:
-                return "m/C"
+                return (" minor slash C", "m/C", "m/C", "m/C")
             case .minorSlashCSharp:
-                return "m/C#"
+                return (" minor slash C sharp", "m/C#", "m/C♯", "m/C♯")
             case .slashD:
-                return "/D"
+                return (" slash D", "/D", "/D", "/D")
             case .minorSlashD:
-                return "m/D"
+                return (" minor slash D", "m/D", "m/D", "m/D")
             case .slashDSharp:
-                return "/D#"
+                return (" slash D sharp", "/D#", "/D♯", "/D♯")
             case .minorSlashDSharp:
-                return "m/D#"
+                return (" minor slash D sharp", "m/D#", "m/D♯", "m/D♯")
             case .minorSlashE:
-                return "m/E"
+                return (" minor slash E", "m/E", "m/E", "m/E")
             case .minorSlashF:
-                return "m/F"
+                return (" minor slash F", "m/F", "m/F", "m/F")
             case .minorSlashFSharp:
-                return "m/F#"
+                return (" minor slash F sharp", "m/F#", "m/F♯", "m/F♯")
             case .minorSlashG:
-                return "m/G"
+                return (" minor slash G", "m/G", "m/G", "m/G")
             case .minorSlashGSharp:
-                return "m/G#"
+                return (" minor slash G sharp", "m/G#", "m/G♯", "m/G♯")
             }
         }
     }
