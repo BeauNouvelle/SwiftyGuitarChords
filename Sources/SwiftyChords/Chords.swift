@@ -83,46 +83,56 @@ public struct Chords {
         case minorSlashGSharp = "m/G#"
         
         /// A suitible string for displaying to users.
-        /// Same as the `rawValue` but with correct capitalization.
-        /// e.g. "mMaj7" rather than "mmaj7".
-        var display: String {
+        /// - `accessible:`  "seven flat five". Useful for text to speech.
+        /// - `short:` Maj, min
+        /// - `symbol:` dim⁷, + For the most common uses of symbols in music notation.
+        /// - `altSymbol:` °, ⁺ Alternative examples of the above `symbol` examples.
+        ///
+        /// Advice is to look through this list and choose what is appropriate for your app. Please submit a PR if you'd like to add or change some of these items if you beleive it could be improved..
+        ///
+        /// For accessibility strings the "th" is dropped from numbers. While not completely accurate, it rolls better.
+        ///
+        /// Symbols use superscript where appropriate (and possible). Be aware that not all fonts will support this. Use `short` instead if you're unsure.
+        ///
+        /// Some items may also be identical across types. Only in rare cases will an alt symbol be provided e.g. (`dim⁷`,`°`)
+        var display: (acessible: String, short: String, symbolized: String, altSymbol: String) {
             switch self {
             case .major:
-                return "Major"
+                return (" major", "Maj", "M", "M")
             case .minor:
-                return "minor"
+                return (" minor", "min", "m", "m")
             case .dim:
-                return "dim"
+                return (" diminished", "dim", "dim", "dim")
             case .dimSeven:
-                return "dim7"
+                return (" dim seven", "dim7", "dim⁷", "°")
             case .susTwo:
-                return "sus2"
+                return (" suss two", "sus2", "sus²", "sus²")
             case .susFour:
-                return "sus4"
+                return (" suss four", "sus4", "sus⁴", "sus⁴")
             case .sevenSusFour:
-                return "7sus4"
+                return (" seven sus four", "7sus4", "⁷sus⁴", "⁷sus⁴")
             case .altered:
-                return "alt"
+                return (" alt", "alt", "alt", "alt")
             case .aug:
-                return "aug"
+                return (" augmented", "aug", "aug", "⁺")
             case .six:
-                return "6"
+                return (" six", "6", "⁶", "⁶")
             case .sixNine:
-                return "6/9"
+                return (" six slash nine", "6/9", "⁶ᐟ⁹", "⁶ᐟ⁹")
             case .seven:
-                return "7"
+                return (" seven", "7", "⁷", "⁷")
             case .sevenFlatFive:
-                return "7b5"
+                return (" seven flat five", "7b5", "⁷♭⁵", "⁷♭⁵")
             case .augSeven:
-                return "aug7"
+                return (" org seven", "aug7", "aug⁷", "⁺⁷")
             case .nine:
-                return "9"
+                return (" nine", "9", "⁹", "⁹")
             case .nineFlatFive:
-                return "9b5"
+                return (" nine flat five", "9b5", "⁹♭⁵", "⁹♭⁵")
             case .augNine:
-                return "aug9"
+                return (" org nine", "aug9", "aug⁹", "⁺⁹")
             case .sevenFlatNine:
-                return "7b9"
+                return (" seven flat nine", "7b9", "⁷♭⁹", "⁷♭⁹")
             case .sevenSharpNince:
                 return "7#9"
             case .eleven:
