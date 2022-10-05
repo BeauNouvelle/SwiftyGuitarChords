@@ -24,5 +24,9 @@ public extension Array where Element == ChordPosition {
     func matching(key: Chords.Key) -> [ChordPosition] {
         return self.filter { $0.key == key }
     }
+    
+    func matching(group: Chords.Group) -> [ChordPosition] {
+        return self.filter { $0.suffix.group == group }
+    }
 
 }
