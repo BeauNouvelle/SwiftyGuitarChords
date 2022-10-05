@@ -32,25 +32,46 @@ Chords.guitar
 ```
 
 #### Filter by Key
-Returns all chords based on C
+Returns all chords based on C#
 
 ```
-Chords.guitar.matching(key: .c)
+Chords.guitar.matching(key: .cSharp)
 ```
 
 #### Filter by Suffix
-Returns all major chords in the database.
+Returns all major seventh chords in the database across all keys.
 
 ```
-Chords.guitar.matching(suffix: .major)
+Chords.guitar.matching(suffix: .majorSeven)
 ```
 
 #### Filter by Key and Suffix
-Returns all CMajor chords. 
+Returns all C Major chords. 
 These will be in order of position on the fretboard, starting at the nut.
 
 ```
 Chords.guitar.matching(key: .c).matching(suffix: .major)
+```
+
+#### Filter by Suffix Group 
+Returns all suspended chords in the database along with their variants such as sus2, sus4
+
+```
+Chords.guitar.matching(group: .suspended)
+```
+
+## Display
+Swift Chords suports a number of alternative texts you can use in your UI including an accessibility text-to-speech friendly variant.
+Display texts from both Key and Suffix properties can be combined to complete the chord name.
+
+NOTE: These are new additions and currently don't work with the drawing portion of the library. All chord names are drawn using the `RawValue` on the Key and Suffix properties. There is an open issue for this.
+
+```
+let cMajSevenFlatFive = Chords.guitar.matching(key: .c).matching(suffix: .majorSevenFlatFive)
+print(cMajSevenFlatFive.suffix.display.accessible) // " major seven flat five"
+print(cMajSevenFlatFive.suffix.display.short)      // "Maj7b5"
+print(cMajSevenFlatFive.suffix.display.symbolized) // "Maj⁷♭⁵" 
+print(cMajSevenFlatFive.suffix.display.altSymbol)  // "M⁷♭⁵"
 ```
 
 ## Drawing
