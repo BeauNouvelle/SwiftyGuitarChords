@@ -22,7 +22,7 @@ public struct Chords {
         case b = "B"
         
         /// Contains text for accessibility text-to-speech and symbolized versions.
-        var display: (accessible: String, symbol: String) {
+        public var display: (accessible: String, symbol: String) {
             switch self {
             case .c:
                 return ("C", "C")
@@ -130,7 +130,7 @@ public struct Chords {
         /// Symbols use superscript where appropriate (and possible). Be aware that not all fonts will support this. Use `short` instead if you're unsure.
         ///
         /// Some items may also be identical across types. Only in rare cases will an alt symbol be provided e.g. (`dim⁷`,`°`)
-        var display: (accessible: String, short: String, symbolized: String, altSymbol: String) {
+        public var display: (accessible: String, short: String, symbolized: String, altSymbol: String) {
             switch self {
             case .major:
                 return (" major", "Maj", "M", "M")
@@ -282,6 +282,38 @@ public struct Chords {
         }
     }
 
+    /// Display options for the chord name
+    public struct Name {
+        /// Init the struct
+        public init(show: Bool = true, key: Name.Display.Key = .raw, suffix: Name.Display.Suffix = .raw) {
+            self.show = show
+            self.key = key
+            self.suffix = suffix
+        }
+        /// Show the name in the chord shape
+        public var show: Bool
+        /// Display of the Key value
+        public var key: Display.Key
+        /// Display of the Suffix value
+        public var suffix: Display.Suffix
+        /// Display modus of the chord name
+        public enum Display {
+            /// Key display modus
+            public enum Key {
+                case raw
+                case accessible
+                case symbol
+            }
+            /// Suffix display modus
+            public enum Suffix {
+                case raw
+                case short
+                case symbolized
+                case altSymbol
+            }
+        }
+    }
+    
     public static var guitar = Chords.readData(for: "GuitarChords")
     public static var ukulele = Chords.readData(for: "UkuleleChords")
 

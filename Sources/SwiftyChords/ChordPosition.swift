@@ -37,15 +37,28 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
     /// - Parameters:
     ///   - rect: The area for which the chord will be drawn to. This determines it's size. Chords have a set aspect ratio, and so the size of the chord will be based on the shortest side of the rect.
     ///   - showFingers: Determines if the finger numbers should be drawn on top of the dots. Default `true`.
+    ///   - chordName: Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text. Default `true`. The display mode can be set for Key and Suffix. Default  `rawValue`
+    ///   - forPrint: If set to `true` the diagram will be colored Black, not matter the users device settings. If set to false, the color of the diagram will match the system label color. Dark text for light mode, and Light text for dark mode. Default `false`.
+    ///   - mirror: For lefthanded users. This will flip the chord along its y axis. Default `false`.
+    /// - Returns: A CAShapeLayer that can be added as a sublayer to a view, or rendered to an image.
+    public func chordLayer(rect: CGRect, showFingers: Bool = true, chordName: Chords.Name = Chords.Name(), forPrint: Bool = false, mirror: Bool = false) -> CAShapeLayer {
+        return privateLayer(rect: rect, showFingers: showFingers, chordName: chordName, forScreen: !forPrint, mirror: mirror)
+    }
+    
+    /// Now deprecated. Please see the chordLayer() function.
+    /// - Parameters:
+    ///   - rect: The area for which the chord will be drawn to. This determines it's size. Chords have a set aspect ratio, and so the size of the chord will be based on the shortest side of the rect.
+    ///   - showFingers: Determines if the finger numbers should be drawn on top of the dots. Default `true`.
     ///   - showChordName: Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text. Default `true`.
     ///   - forPrint: If set to `true` the diagram will be colored Black, not matter the users device settings. If set to false, the color of the diagram will match the system label color. Dark text for light mode, and Light text for dark mode. Default `false`.
     ///   - mirror: For lefthanded users. This will flip the chord along its y axis. Default `false`.
     /// - Returns: A CAShapeLayer that can be added as a sublayer to a view, or rendered to an image.
+    @available(*, deprecated, message: "Chord name can be formatted now.", renamed: "chordLayer")
     public func shapeLayer(rect: CGRect, showFingers: Bool = true, showChordName: Bool = true, forPrint: Bool = false, mirror: Bool = false) -> CAShapeLayer {
-        return privateLayer(rect: rect, showFingers: showFingers, showChordName: showChordName, forScreen: !forPrint, mirror: mirror)
+        return privateLayer(rect: rect, showFingers: showFingers, chordName: Chords.Name(show: showChordName, key: .raw, suffix: .raw), forScreen: !forPrint, mirror: mirror)
     }
 
-    /// Now deprecated. Please see the shapeLayer() function.
+    /// Now deprecated. Please see the chordLayer() function.
     /// - Parameters:
     ///   - rect: The area for which the chord will be drawn to. This determines it's size. Chords have a set aspect ratio, and so the size of the chord will be based on the shortest side of the rect.
     ///   - showFingers: Determines if the finger numbers should be drawn on top of the dots.
@@ -53,13 +66,13 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
     ///   - forScreen: This takes care of Dark/Light mode. If it's on device ONLY, set this to true. When adding to a PDF, you'll want to set this to false.
     ///   - mirror: For lefthanded users. This will flip the chord along its y axis.
     /// - Returns: A CAShapeLayer that can be added to a view, or rendered to an image.
-    @available(*, deprecated, message: "For screen should have been defaulted to 'true'. Please use the better worded function instead.", renamed: "shapeLayer")
+    @available(*, deprecated, message: "For screen should have been defaulted to 'true'. Also; chord name can be formatted now.", renamed: "chordLayer")
     public func layer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool, mirror: Bool = false) -> CAShapeLayer {
-        return privateLayer(rect: rect, showFingers: showFingers, showChordName: showChordName, forScreen: forScreen, mirror: mirror)
+        return privateLayer(rect: rect, showFingers: showFingers, chordName: Chords.Name(show: showChordName, key: .raw, suffix: .raw), forScreen: forScreen, mirror: mirror)
     }
 
-    private func privateLayer(rect: CGRect, showFingers: Bool, showChordName: Bool, forScreen: Bool, mirror: Bool = false) -> CAShapeLayer {
-        let heightMultiplier: CGFloat = showChordName ? 1.3 : 1.2
+    private func privateLayer(rect: CGRect, showFingers: Bool, chordName: Chords.Name, forScreen: Bool, mirror: Bool = false) -> CAShapeLayer {
+        let heightMultiplier: CGFloat = chordName.show ? 1.3 : 1.2
         let horScale = rect.height / heightMultiplier
         let scale = min(horScale, rect.width)
         let newHeight = scale * heightMultiplier
@@ -69,8 +82,8 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         let fretMargin = size.height / 10
 
         let fretLength = size.width - (stringMargin * 2)
-        let stringLength = size.height - (fretMargin * (showChordName ? 2.8 : 2))
-        let origin = CGPoint(x: rect.origin.x, y: showChordName ? fretMargin * 1.2 : 0)
+        let stringLength = size.height - (fretMargin * (chordName.show ? 2.8 : 2))
+        let origin = CGPoint(x: rect.origin.x, y: chordName.show ? fretMargin * 1.2 : 0)
 
         let fretSpacing = stringLength / CGFloat(ChordPosition.numberOfFrets)
         let stringSpacing = fretLength / CGFloat(ChordPosition.numberOfStrings)
@@ -87,8 +100,8 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         layer.addSublayer(barre)
         layer.addSublayer(dots)
 
-        if showChordName {
-            let shapeLayer = nameLayer(fretConfig: fretConfig, origin: origin, center: size.width / 2 + origin.x, forScreen: forScreen)
+        if chordName.show {
+            let shapeLayer = nameLayer(fretConfig: fretConfig, origin: origin, center: size.width / 2 + origin.x, forScreen: forScreen, name: chordName)
             layer.addSublayer(shapeLayer)
         }
 
@@ -175,7 +188,29 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         return layer
     }
 
-    private func nameLayer(fretConfig: LineConfig, origin: CGPoint, center: CGFloat, forScreen: Bool) -> CAShapeLayer {
+    private func nameLayer(fretConfig: LineConfig, origin: CGPoint, center: CGFloat, forScreen: Bool, name: Chords.Name) -> CAShapeLayer {
+        var displayKey: String {
+            switch name.key {
+            case .raw:
+                return key.rawValue
+            case .accessible:
+                return key.display.accessible
+            case .symbol:
+                return key.display.symbol
+            }
+        }
+        var displaySuffix: String {
+            switch name.suffix {
+            case .raw:
+                return suffix.rawValue
+            case .short:
+                return suffix.display.short
+            case .symbolized:
+                return suffix.display.symbolized
+            case .altSymbol:
+                return suffix.display.altSymbol
+            }
+        }
         #if os(iOS)
         let txtFont = UIFont.systemFont(ofSize: fretConfig.margin, weight: .medium)
         #else
@@ -184,7 +219,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
 
         let txtRect = CGRect(x: 0, y: 0, width: fretConfig.length, height: fretConfig.margin + origin.y)
         let transY = (origin.y + fretConfig.margin) * 0.35
-        let txtPath = (key.rawValue + " " + suffix.rawValue).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
+        let txtPath = (displayKey + " " + displaySuffix).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
         let shape = CAShapeLayer()
         shape.path = txtPath
         #if os(iOS)

@@ -64,8 +64,6 @@ Chords.guitar.matching(group: .suspended)
 Swifty Chords suports a number of alternative texts you can use in your UI including an accessibility text-to-speech friendly variant.
 Display texts from both Key and Suffix properties can be combined to complete the chord name.
 
-NOTE: These are new additions and currently don't work with the drawing portion of the library. All chord names are drawn using the `RawValue` on the Key and Suffix properties. There is an open issue for this.
-
 ```
 let cMajSevenFlatFive = Chords.guitar.matching(key: .c).matching(suffix: .majorSevenFlatFive)
 print(cMajSevenFlatFive.suffix.display.accessible) // " major seven flat five"
@@ -82,7 +80,7 @@ To use it, we just need a chord!
 ```
 let chordPosition = Chords.guitar.matching(key: .c).matching(suffix: .major).first!
 let frame = CGRect(x: 0, y: 0, width: 100, height: 150) // I find these sizes to be good.
-let layer = chordPosition.shapeLayer(rect: frame)
+let layer = chordPosition.chordLayer(rect: frame, chordName: .init(show: true, key: .symbol, suffix: .symbolized))
 imageView.image = layer.image() // might be expensive. Use Layers when possible while drawing to a view. Images are better if you plan to send them outside the app.
 ```
 
@@ -91,7 +89,7 @@ imageView.image = layer.image() // might be expensive. Use Layers when possible 
 
 `showFingers`: Determines if the finger numbers should be drawn on top of the dots. Default `true`.
 
-`showChordName` Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text. Default `true`.
+`showChordName` Determines if the chord name should be drawn above the chord. Choosing this option will reduce the size of the chord chart slightly to account for the text. Default `true`. The display mode can be set for Key and Suffix. Default `rawValue`
 
 `forPrint`: If set to `true` the diagram will be colored Black, ignoring the users device settings. If set to `false`, the color of the diagram will match the system label color. Dark text for light mode, and Light text for dark mode. Default `false`.
 
