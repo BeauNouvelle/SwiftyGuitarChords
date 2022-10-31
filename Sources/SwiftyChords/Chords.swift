@@ -10,12 +10,14 @@ public struct Chords {
     public enum Key: String, CaseIterable, Codable, Comparable {
         case c = "C"
         case cSharp = "C#"
+        case dFlat = "Db"
         case d = "D"
         case dSharp = "D#"
         case eFlat = "Eb"
         case e = "E"
         case f = "F"
         case fSharp = "F#"
+        case gFlat = "Gb"
         case g = "G"
         case gSharp = "G#"
         case aFlat = "Ab"
@@ -36,6 +38,8 @@ public struct Chords {
                 return ("C", "C")
             case .cSharp:
                 return ("C sharp", "C♯")
+            case .dFlat:
+                return ("D flat", "D♭")
             case .d:
                 return ("D", "D")
             case .dSharp:
@@ -48,6 +52,8 @@ public struct Chords {
                 return ("F", "F")
             case .fSharp:
                 return ("F sharp", "F♯")
+            case .gFlat:
+                return ("G flat", "G♭")
             case .g:
                 return ("G", "G")
             case .gSharp:
