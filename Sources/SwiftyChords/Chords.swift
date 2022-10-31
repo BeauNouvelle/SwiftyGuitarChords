@@ -11,13 +11,16 @@ public struct Chords {
         case c = "C"
         case cSharp = "C#"
         case d = "D"
+        case dSharp = "D#"
         case eFlat = "Eb"
         case e = "E"
         case f = "F"
         case fSharp = "F#"
         case g = "G"
+        case gSharp = "G#"
         case aFlat = "Ab"
         case a = "A"
+        case aSharp = "A#"
         case bFlat = "Bb"
         case b = "B"
         
@@ -30,6 +33,8 @@ public struct Chords {
                 return ("C sharp", "C♯")
             case .d:
                 return ("D", "D")
+            case .dSharp:
+                return ("D sharp", "D♯")
             case .eFlat:
                 return ("E flat", "E♭")
             case .e:
@@ -40,10 +45,14 @@ public struct Chords {
                 return ("F sharp", "F♯")
             case .g:
                 return ("G", "G")
+            case .gSharp:
+                return ("G sharp", "G♯")
             case .aFlat:
                 return ("A flat", "A♭")
             case .a:
                 return ("A", "A")
+            case .aSharp:
+                return ("A sharp", "A♯")
             case .bFlat:
                 return ("B flat", "B♭")
             case .b:
