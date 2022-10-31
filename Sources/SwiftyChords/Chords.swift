@@ -7,7 +7,7 @@ public struct Chords {
         case major, minor, diminished, augmented, suspended, other
     }
 
-    public enum Key: String, CaseIterable, Codable {
+    public enum Key: String, CaseIterable, Codable, Comparable {
         case c = "C"
         case cSharp = "C#"
         case d = "D"
@@ -23,6 +23,11 @@ public struct Chords {
         case aSharp = "A#"
         case bFlat = "Bb"
         case b = "B"
+        
+        /// Implement Comparable
+        public static func < (lhs: Self, rhs: Self) -> Bool {
+            return allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
+        }
         
         /// Contains text for accessibility text-to-speech and symbolized versions.
         public var display: (accessible: String, symbol: String) {
@@ -61,7 +66,7 @@ public struct Chords {
         }
     }
 
-    public enum Suffix: String, CaseIterable, Codable {
+    public enum Suffix: String, CaseIterable, Codable, Comparable {
         case major = "major"
         case minor = "minor"
         case dim = "dim"
@@ -124,6 +129,11 @@ public struct Chords {
         case minorSlashFSharp = "m/F#"
         case minorSlashG = "m/G"
         case minorSlashGSharp = "m/G#"
+        
+        /// Implement Comparable
+        public static func < (lhs: Self, rhs: Self) -> Bool {
+            return allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
+        }
         
         /// A suitible string for displaying to users.
         /// - `accessible:`  "seven flat five". Useful for text to speech.
