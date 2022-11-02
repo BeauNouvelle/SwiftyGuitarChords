@@ -15,6 +15,19 @@ import AppKit
 #endif
 
 public struct ChordPosition: Codable, Identifiable, Equatable {
+    
+    public init(id: UUID = UUID(), frets: [Int], fingers: [Int], baseFret: Int, barres: [Int], capo: Bool? = nil, midi: [Int], key: Chords.Key, suffix: Chords.Suffix) {
+        self.id = id
+        self.frets = frets
+        self.fingers = fingers
+        self.baseFret = baseFret
+        self.barres = barres
+        self.capo = capo
+        self.midi = midi
+        self.key = key
+        self.suffix = suffix
+    }
+    
     public var id: UUID = UUID()
 
     public let frets: [Int]
