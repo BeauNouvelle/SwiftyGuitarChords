@@ -7,19 +7,29 @@ public struct Chords {
         case major, minor, diminished, augmented, suspended, other
     }
 
-    public enum Key: String, CaseIterable, Codable {
+    public enum Key: String, CaseIterable, Codable, Comparable {
         case c = "C"
         case cSharp = "C#"
+        case dFlat = "Db"
         case d = "D"
+        case dSharp = "D#"
         case eFlat = "Eb"
         case e = "E"
         case f = "F"
         case fSharp = "F#"
+        case gFlat = "Gb"
         case g = "G"
+        case gSharp = "G#"
         case aFlat = "Ab"
         case a = "A"
+        case aSharp = "A#"
         case bFlat = "Bb"
         case b = "B"
+        
+        /// Implement Comparable
+        public static func < (lhs: Self, rhs: Self) -> Bool {
+            return allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
+        }
         
         /// Contains text for accessibility text-to-speech and symbolized versions.
         public var display: (accessible: String, symbol: String) {
@@ -28,8 +38,12 @@ public struct Chords {
                 return ("C", "C")
             case .cSharp:
                 return ("C sharp", "C♯")
+            case .dFlat:
+                return ("D flat", "D♭")
             case .d:
                 return ("D", "D")
+            case .dSharp:
+                return ("D sharp", "D♯")
             case .eFlat:
                 return ("E flat", "E♭")
             case .e:
@@ -38,12 +52,18 @@ public struct Chords {
                 return ("F", "F")
             case .fSharp:
                 return ("F sharp", "F♯")
+            case .gFlat:
+                return ("G flat", "G♭")
             case .g:
                 return ("G", "G")
+            case .gSharp:
+                return ("G sharp", "G♯")
             case .aFlat:
                 return ("A flat", "A♭")
             case .a:
                 return ("A", "A")
+            case .aSharp:
+                return ("A sharp", "A♯")
             case .bFlat:
                 return ("B flat", "B♭")
             case .b:
@@ -52,7 +72,7 @@ public struct Chords {
         }
     }
 
-    public enum Suffix: String, CaseIterable, Codable {
+    public enum Suffix: String, CaseIterable, Codable, Comparable {
         case major = "major"
         case minor = "minor"
         case dim = "dim"
@@ -115,6 +135,11 @@ public struct Chords {
         case minorSlashFSharp = "m/F#"
         case minorSlashG = "m/G"
         case minorSlashGSharp = "m/G#"
+        
+        /// Implement Comparable
+        public static func < (lhs: Self, rhs: Self) -> Bool {
+            return allCases.firstIndex(of: lhs)! < allCases.firstIndex(of: rhs)!
+        }
         
         /// A suitible string for displaying to users.
         /// - `accessible:`  "seven flat five". Useful for text to speech.
