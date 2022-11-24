@@ -80,6 +80,7 @@ public struct Chords {
         case susTwo = "sus2"
         case susFour = "sus4"
         case sevenSusFour = "7sus4"
+        case five = "5"
         case altered = "alt"
         case aug = "aug"
         case six = "6"
@@ -171,6 +172,8 @@ public struct Chords {
                 return (" suss four", "sus4", "sus⁴", "sus⁴")
             case .sevenSusFour:
                 return (" seven sus four", "7sus4", "⁷sus⁴", "⁷sus⁴")
+            case .five:
+                return (" power", "5", "⁵", "⁵")
             case .altered:
                 return (" alt", "alt", "alt", "alt")
             case .aug:
@@ -301,7 +304,7 @@ public struct Chords {
                 return .suspended
             case .aug, .augSeven, .augNine:
                 return .augmented
-            case .altered, .six, .sixNine, .seven, .sevenFlatFive, .nine, .nineFlatFive, .sevenFlatNine, .sevenSharpNine, .eleven, .nineSharpEleven, .thirteen:
+            case .altered, .five, .six, .sixNine, .seven, .sevenFlatFive, .nine, .nineFlatFive, .sevenFlatNine, .sevenSharpNine, .eleven, .nineSharpEleven, .thirteen:
                 return .other
             }
         }
