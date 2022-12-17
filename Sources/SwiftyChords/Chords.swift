@@ -159,7 +159,7 @@ public struct Chords {
         public var display: (accessible: String, short: String, symbolized: String, altSymbol: String) {
             switch self {
             case .major:
-                return (" major", "Maj", "M", "M")
+                return (" major", "Maj", "", "")
             case .minor:
                 return (" minor", "min", "m", "m")
             case .dim:
