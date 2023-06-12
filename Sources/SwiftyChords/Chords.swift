@@ -99,6 +99,7 @@ public struct Chords {
         case majorSeven = "maj7"
         case majorSevenFlatFive = "maj7b5"
         case majorSevenSharpFive = "maj7#5"
+        case sevenSharpFive = "7#5"
         case majorNine = "maj9"
         case majorEleven = "maj11"
         case majorThirteen = "maj13"
@@ -198,6 +199,8 @@ public struct Chords {
                 return (" seven flat nine", "7b9", "⁷♭⁹", "⁷♭⁹")
             case .sevenSharpNine:
                 return (" seven sharp nine", "7#9", "⁷♯⁹", "⁷♯⁹")
+            case .sevenSharpFive:
+                return (" dominant sharp five", "7#5", "⁷♯⁵", "⁷♯⁵")
             case .eleven:
                 return (" eleven", "11", "¹¹", "¹¹")
             case .nineSharpEleven:
@@ -304,7 +307,7 @@ public struct Chords {
                 return .suspended
             case .aug, .augSeven, .augNine:
                 return .augmented
-            case .altered, .five, .six, .sixNine, .seven, .sevenFlatFive, .nine, .nineFlatFive, .sevenFlatNine, .sevenSharpNine, .eleven, .nineSharpEleven, .thirteen:
+            case .altered, .five, .six, .sixNine, .seven, .sevenFlatFive, .nine, .nineFlatFive, .sevenFlatNine, .sevenSharpNine, .eleven, .nineSharpEleven, .thirteen, .sevenSharpFive:
                 return .other
             }
         }
