@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if os(iOS)
+#if !os(macOS)
 import UIKit
 #else
 import AppKit
@@ -15,7 +15,7 @@ import AppKit
 
 extension String {
 
-    #if os(iOS)
+    #if !os(macOS)
     func path(font: UIFont, rect: CGRect, alignment: NSTextAlignment = .left, position: CGPoint) -> CGPath {
         let titleParagraphStyle = NSMutableParagraphStyle()
         titleParagraphStyle.alignment = alignment

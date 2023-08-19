@@ -8,7 +8,7 @@
 import Foundation
 import CoreGraphics
 
-#if os(iOS)
+#if !os(macOS)
 import UIKit
 #else
 import AppKit
@@ -161,7 +161,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             // Draw fret number
             if baseFret != 1 {
                 let txtLayer = CAShapeLayer()
-                #if os(iOS)
+                #if !os(macOS)
                 let txtFont = UIFont.systemFont(ofSize: fretConfig.margin * 0.5)
                 #else
                 let txtFont = NSFont.systemFont(ofSize: fretConfig.margin * 0.5)
@@ -171,7 +171,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
                 let transY = origin.y + (fretConfig.spacing / 2) + fretConfig.margin
                 let txtPath = "\(baseFret)".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
                 txtLayer.path = txtPath
-                #if os(iOS)
+                #if !os(macOS)
                 txtLayer.fillColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
                 #else
                 txtLayer.fillColor = forScreen ? NSColor.labelColor.cgColor : NSColor.black.cgColor
@@ -188,7 +188,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             fret.path = fretPath
             fret.lineWidth = lineWidth
             fret.lineCap = .square
-            #if os(iOS)
+            #if !os(macOS)
             fret.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
             #else
             fret.strokeColor = forScreen ? NSColor.labelColor.cgColor : NSColor.black.cgColor
@@ -224,7 +224,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
                 return suffix.display.altSymbol
             }
         }
-        #if os(iOS)
+        #if !os(macOS)
         let txtFont = UIFont.systemFont(ofSize: fretConfig.margin, weight: .medium)
         #else
         let txtFont = NSFont.systemFont(ofSize: fretConfig.margin, weight: .medium)
@@ -235,7 +235,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         let txtPath = (displayKey + " " + displaySuffix).path(font: txtFont, rect: txtRect, position: CGPoint(x: center, y: transY))
         let shape = CAShapeLayer()
         shape.path = txtPath
-        #if os(iOS)
+        #if !os(macOS)
         shape.fillColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
         #else
         shape.fillColor = forScreen ? NSColor.labelColor.cgColor : NSColor.black.cgColor
@@ -279,7 +279,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             barreLayer.path = barrePath
             barreLayer.lineCap = .round
             barreLayer.lineWidth = fretConfig.spacing * 0.65
-            #if os(iOS)
+            #if !os(macOS)
             barreLayer.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
             #else
             barreLayer.strokeColor = forScreen ? NSColor.labelColor.cgColor : NSColor.black.cgColor
@@ -289,7 +289,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
 
             if showFingers {
                 let fingerLayer = CAShapeLayer()
-                #if os(iOS)
+                #if !os(macOS)
                 let txtFont = UIFont.systemFont(ofSize: stringConfig.margin, weight: .medium)
                 #else
                 let txtFont = NSFont.systemFont(ofSize: stringConfig.margin, weight: .medium)
@@ -302,7 +302,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
                     let txtPath = "\(fingers[fretIndex])".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
                     fingerLayer.path = txtPath
                 }
-                #if os(iOS)
+                #if !os(macOS)
                 fingerLayer.fillColor = forScreen ? UIColor.systemBackground.cgColor : UIColor.white.cgColor
                 #else
                 fingerLayer.fillColor = forScreen ? NSColor.windowBackgroundColor.cgColor : NSColor.white.cgColor
@@ -334,7 +334,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
                 let circleLayer = CAShapeLayer()
                 circleLayer.path = circle
                 circleLayer.lineWidth = fretConfig.spacing / 24
-                #if os(iOS)
+                #if !os(macOS)
                 circleLayer.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
                 circleLayer.fillColor = forScreen ? UIColor.systemBackground.cgColor : UIColor.white.cgColor
                 #else
@@ -367,7 +367,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
                 crossLayer.path = cross
                 crossLayer.lineWidth = fretConfig.spacing / 24
 
-                #if os(iOS)
+                #if !os(macOS)
                 crossLayer.strokeColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
                 #else
                 crossLayer.strokeColor = forScreen ? NSColor.labelColor.cgColor : NSColor.black.cgColor
@@ -402,7 +402,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
 
             let dotLayer = CAShapeLayer()
             dotLayer.path = dotPath
-            #if os(iOS)
+            #if !os(macOS)
             dotLayer.fillColor = forScreen ? UIColor.label.cgColor : UIColor.black.cgColor
             #else
             dotLayer.fillColor = forScreen ? NSColor.labelColor.cgColor : NSColor.black.cgColor
@@ -410,7 +410,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
             layer.addSublayer(dotLayer)
 
             if showFingers {
-                #if os(iOS)
+                #if !os(macOS)
                 let txtFont = UIFont.systemFont(ofSize: stringConfig.margin, weight: .medium)
                 #else
                 let txtFont = NSFont.systemFont(ofSize: stringConfig.margin, weight: .medium)
@@ -419,7 +419,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
                 let txtPath = "\(fingers[index])".path(font: txtFont, rect: txtRect, position: CGPoint(x: dotX, y: dotY))
                 let txtLayer = CAShapeLayer()
                 txtLayer.path = txtPath
-                #if os(iOS)
+                #if !os(macOS)
                 txtLayer.fillColor = forScreen ? UIColor.systemBackground.cgColor : UIColor.white.cgColor
                 #else
                 txtLayer.fillColor = forScreen ? NSColor.windowBackgroundColor.cgColor : NSColor.white.cgColor

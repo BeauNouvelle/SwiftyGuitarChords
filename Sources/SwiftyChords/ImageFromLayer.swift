@@ -7,7 +7,7 @@
 
 import Foundation
 
-#if os(iOS)
+#if !os(macOS)
 import UIKit
 public extension CALayer {
     func image() -> UIImage? {
