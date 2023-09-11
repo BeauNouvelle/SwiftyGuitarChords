@@ -227,6 +227,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         let layer = CAShapeLayer()
 
         let primaryColor = forScreen ? primaryColor.cgColor : SWIFTColor.black.cgColor
+        let backgroundColor = forScreen ? backgroundColor.cgColor : SWIFTColor.white.cgColor
 
         for barre in barres {
             let barrePath = CGMutablePath()
@@ -276,7 +277,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
                     let txtPath = "\(fingers[fretIndex])".path(font: txtFont, rect: txtRect, position: CGPoint(x: transX, y: transY))
                     fingerLayer.path = txtPath
                 }
-                fingerLayer.fillColor = primaryColor
+                fingerLayer.fillColor = backgroundColor
                 layer.addSublayer(fingerLayer)
             }
         }
@@ -288,7 +289,7 @@ public struct ChordPosition: Codable, Identifiable, Equatable {
         let layer = CAShapeLayer()
 
         let primaryColor = forScreen ? primaryColor.cgColor : SWIFTColor.black.cgColor
-        let backgroundColor = forScreen ? backgroundColor.cgColor : SWIFTColor.black.cgColor
+        let backgroundColor = forScreen ? backgroundColor.cgColor : SWIFTColor.white.cgColor
 
         for index in 0..<frets.count {
             let fret = frets[index]
