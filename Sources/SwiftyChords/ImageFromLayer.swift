@@ -1,32 +1,19 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Beau Nouvelle on 2021-01-23.
 //
 
-import Foundation
-
-#if os(iOS)
-import UIKit
-public extension CALayer {
-    func image() -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, self.isOpaque, 0)
-
-        defer { UIGraphicsEndImageContext() }
-
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return nil
-        }
-
-        self.render(in: context)
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-}
-#else
+#if os(macOS)
 import AppKit
+#else
+import UIKit
+#endif
+
 public extension CALayer {
-    func image() -> NSImage? {
+    func image() -> SWIFTImage? {
+#if os(macOS)
         self.sublayerTransform = CATransform3DMakeScale(1.0, -1.0, 1.0)
 
         let width = Int(bounds.width * self.contentsScale)
@@ -43,8 +30,17 @@ public extension CALayer {
         }
 
         return NSImage(cgImage: image, size: bounds.size)
+#else
+        UIGraphicsBeginImageContextWithOptions(self.frame.size, self.isOpaque, 0)
+
+        defer { UIGraphicsEndImageContext() }
+
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
+
+        self.render(in: context)
+        return UIGraphicsGetImageFromCurrentImageContext()
+#endif
     }
 }
-#endif
-
-
