@@ -60,6 +60,14 @@ Returns all suspended chords in the database along with their variants such as s
 Chords.guitar.matching(group: .suspended)
 ```
 
+### Filter by String Keyword
+Returns all Dsus4 chords. This works the same as filtering by key and suffix.
+
+```swift
+Chords.guitar.matching(keyword: "Dsus4") // same as Chords.guitar.matching(key: .d).matching(suffix: .sus4)
+```
+
+
 ## Display
 Swifty Chords suports a number of alternative texts you can use in your UI including an accessibility text-to-speech friendly variant.
 Display texts from both Key and Suffix properties can be combined to complete the chord name.
