@@ -60,7 +60,7 @@ Returns all suspended chords in the database along with their variants such as s
 Chords.guitar.matching(group: .suspended)
 ```
 
-### Filter by String Keyword
+#### Filter by String Keyword
 Returns all Dsus4 chords. This works the same as filtering by key and suffix.
 
 ```swift
